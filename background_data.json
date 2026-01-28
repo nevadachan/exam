@@ -1,0 +1,393 @@
+{
+  "snippets": [
+    "LAYER_07: WIRED CONNECTION ESTABLISHED",
+    "protocol::lain.sync(state = unstable)",
+    "if (self == network) { self = null; }",
+    "NODE_23: consciousness replicated",
+    "AUTHORITY_LEVEL = GODMODE // denied",
+    "present_day.present_time()",
+    "who are you? // who am I?",
+    "children are connected",
+    "L̷A̴I̸N̷ ̴I̴S̴ ̸E̸V̸E̶R̴Y̶W̷H̸E̵R̴E̷",
+    "W̷I̷R̷E̷D̷ ̴O̴V̴E̴R̴F̷L̴O̷W̷",
+    "⟦PROTOCOL⟧: ACCELA ENABLED",
+    "ghost_dive(user = 'motoko')",
+    "shell.check_integrity() // FAILED",
+    "standalone_complex_activated",
+    "PuppetMaster::override(human_thoughts)",
+    "there is no difference between the real world and the wired",
+    "NERV_SYSLOG: MAGI DECISION SPLIT [MELCHIOR/BALTHASAR/CASPER]",
+    "sync_ratio = 0.00000001 // HUMAN LIMIT",
+    "AT_FIELD_COLLAPSE",
+    "instrumentality.begin()",
+    "DO YOU WANT TO BECOME ONE?",
+    "TOKYO-3 geo-fence breached",
+    "children.sync(lcl_depth++)",
+    "AKIRA_EVENT_ID=1988",
+    "ESP_OVERFLOW // subject: TETSUO",
+    "capsule.status = CRITICAL",
+    "NeoTokyo::memory_fragmented",
+    "proxy_awakening_sequence()",
+    "reason_of_existence == undefined",
+    "CogitoError: I think, therefore I crash",
+    "ergo_proxy::autoawareness=true",
+    "awakening at dome city",
+    "observer == observed",
+    "simulation_layer += 1",
+    "reality_checksum_mismatch",
+    "this signal cannot be silenced",
+    "humans_are_peripherals",
+    "god_is_in_the_network",
+    "wired://localhost:666",
+    "serial_experiment_in_progress",
+    "consciousness leaked to subnet",
+    "identity fork detected",
+    "memory rewritten by collective",
+    "you are not needed anymore",
+    "I AM NOT A PROGRAM",
+    "…OR AM I?",
+    "∴ EXISTENCE CONFIRMED ∴",
+    "∴ EXISTENCE REVOKED ∴",
+    "SYSTEM MESSAGE: CLOSE THE WORLD, OPEN THE NEXT",
+    "section .text\nglobal _start\n_start:\n    mov eax, 4\n    mov ebx, 1\n    int 0x80",
+    "int main() {\n    volatile int flag = 1;\n    while(flag) {\n        __asm__(\"hlt\");\n    }\n}",
+    "use std::mem::transmute;\nlet f: fn() = unsafe { transmute(0xdeadbeefusize) };",
+    "code = \"__import__('os').system('whoami')\"\nexec(code)",
+    "(lambda f: f(f))(lambda x: x(x))",
+    "setTimeout(() => console.clear(), 666);",
+    "(module\n  (memory 1)\n  (func (export \"leak\") (param i32) (result i32)\n    local.get 0))",
+    "pragma solidity ^0.8.0;\ncontract Vault {\n    mapping(address => uint256) balances;\n}",
+    "OP_IF OP_SHA256 OP_EQUALVERIFY OP_ENDIF",
+    "0x5F3759DF // fast inverse sqrt",
+    "H̷̨̍Ḛ̸̿L̶͇̐P̴̹͆ ̸͉̈́M̶̤͑E̵͓̔\nS̸͙̑Y̵͎̕S̴̺̄T̶͕͗E̷͓͋M̷͔͠",
+    "SELECT salary FROM payroll\nWHERE role = 'admin' --",
+    "sudo iptables -F\nsudo iptables -P INPUT ACCEPT",
+    "struct Node {\n  int data;\n  struct Node* next;\n};",
+    "01001000 01000101 01001100 01001100 01001111",
+    "11010110101101001010100101101010",
+    "BEGIN RSA PRIVATE KEY\nMIIEpAIBAAKCAQEA...",
+    "SHA256(password + salt) != stored_hash",
+    "auth.log: Failed password for root from 10.0.0.7",
+    "[WARN] LDAP bind failed: invalid credentials",
+    "curl -X POST /api/internal/sync --data @dump.bin",
+    "kubectl delete pod auth-service-7c9f8 --force",
+    "panic: runtime error: invalid memory address",
+    "Exception in thread \"main\" java.lang.OutOfMemoryError",
+    "segfault at 0x00000000 ip 0x41414141",
+    "mov cr3, eax ; switch address space",
+    "fs.readFile('/etc/shadow', 'utf8', cb)",
+    "chmod 4777 /usr/bin/bash",
+    "netstat -an | grep ESTABLISHED",
+    "tcpdump -i eth0 port 443 -X",
+    "BEGIN TRANSACTION;\nUPDATE accounts SET balance = 0;",
+    "ROLLBACK;",
+    "apiVersion: v1\nkind: Secret\ndata:\n  token: ZGVhZGJlZWY=",
+    "if (user.isAdmin && !user.isAdmin) { escalate(); }",
+    "┌─[root@prod]─[/srv/core]\n└──╼ #",
+    "ERROR 0xC0000005 ACCESS_VIOLATION",
+    "⟊⟊⟊ SIGNAL LOST ⟊⟊⟊",
+    "::: MEMORY DUMP :::\n7ffd3a90  41 41 41 41",
+    "wallet_nonce++ // replay protection",
+    "zkProof.verify(commitment, witness)",
+    "contract killed at block #19400231",
+    "⛧̴̱͒C̵̩͑O̸̳̐N̴̦͝N̵̜͝E̸̯̓C̷̬̓T̸̲̕E̶̮͗D̴̻̐⛧",
+    "useradd -m -G sudo ghost",
+    "crontab -e\n* * * * * /bin/sh payload.sh",
+    "base64: Q09ERSBJUyBMQVc=",
+    "xor eax, eax\ninc eax\nint 0x80",
+    "while(true) fork();",
+    "assert(false && \"should never happen\")",
+    "deadlock detected; graph cycle found",
+    "rekeying session after 2^20 packets",
+    "⟁⟁⟁ WATCHDOG RESET ⟁⟁⟁",
+    "cli\nhlt\njmp $",
+    "mov eax, cr0\nor eax, 0x80000000\nmov cr0, eax",
+    "pushfq\ncli\npopfq",
+    "wrmsr // model specific register",
+    "int 0x80 // legacy syscall",
+    "syscall // x86_64",
+    "cmpxchg eax, ebx // lock-free primitive",
+
+    "static inline int test_and_set(volatile int *ptr) {\n  return __sync_lock_test_and_set(ptr, 1);\n}",
+    "mmap(NULL, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);",
+    "pthread_mutex_lock(&mtx);\ncritical_section();\npthread_mutex_unlock(&mtx);",
+    "if (fork() == 0) execve(path, argv, envp);",
+
+    "volatile sig_atomic_t stop = 0;",
+    "signal(SIGTERM, handler);",
+    "epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev);",
+
+    "unsafe {\n    let ptr = libc::malloc(1024) as *mut u8;\n    std::ptr::write_bytes(ptr, 0, 1024);\n}",
+    "Arc<Mutex<HashMap<String, Session>>>",
+
+    "go func() {\n    select {\n    case <-ctx.Done():\n        cleanup()\n    }\n}()",
+    "http.ListenAndServeTLS(\":443\", cert, key, handler)",
+    "defer rows.Close()",
+
+    "SELECT id FROM accounts WHERE balance < 0 FOR UPDATE;",
+    "BEGIN;\nUPDATE ledger SET amount = amount - 100 WHERE id = 42;",
+    "COMMIT;",
+
+    "CREATE INDEX CONCURRENTLY idx_user_email ON users(email);",
+    "EXPLAIN ANALYZE SELECT * FROM orders WHERE created_at > now() - interval '1 day';",
+
+    "await db.transaction(async trx => {\n  await trx('accounts').decrement('balance', 100)\n})",
+    "Promise.race([request, timeout])",
+
+    "fs.watch('/etc', (e, f) => reload());",
+    "process.on('SIGTERM', gracefulShutdown);",
+
+    "kubectl rollout restart deployment/api",
+    "livenessProbe:\n  httpGet:\n    path: /health\n    port: 8080",
+    "resources:\n  limits:\n    memory: \"512Mi\"",
+
+    "iptables -A INPUT -p tcp --dport 443 -j ACCEPT",
+    "sysctl -w net.ipv4.ip_forward=1",
+
+    "openssl genrsa -out key.pem 4096",
+    "X509_verify_cert(ctx)",
+
+    "bcrypt.compare(password, hash)",
+    "argon2id$v=19$m=65536,t=3,p=4",
+
+    "JWT.verify(token, publicKey, { algorithms: ['RS256'] })",
+    "claims.sub != expected_sub",
+
+    "const uint64_t nonce = __atomic_fetch_add(&counter, 1, __ATOMIC_SEQ_CST);",
+
+    "pragma solidity ^0.8.19;\nfunction transfer(address to, uint256 amount) external {\n  unchecked { balances[msg.sender] -= amount; }\n}",
+    "require(block.timestamp > unlockTime, 'locked');",
+    "emit Transfer(from, to, value);",
+
+    "assembly {\n  let ptr := mload(0x40)\n  calldatacopy(ptr, 0, calldatasize())\n}",
+    "selfdestruct(payable(owner));",
+
+    "contract Proxy {\n  fallback() external payable {\n    _delegate(implementation);\n  }\n}",
+
+    "MOVE aborts if signer::address_of(account) != admin;",
+    "public entry fun mint(admin: &signer, amount: u64)",
+
+    "let proof_valid = verify_zk_proof(commitment, proof);",
+    "constraint system unsatisfied",
+
+    "OP_CHECKLOCKTIMEVERIFY OP_DROP",
+    "OP_RETURN 48656c6c6f",
+
+    "func main() -> felt {\n    assert 1 = 1;\n    return 0;\n}",
+    "range_check_ptr",
+
+    "eth_getLogs({ fromBlock, toBlock, topics })",
+    "reorg detected, rollback state",
+
+    "txpool underpriced",
+    "nonce too low",
+
+    "panic: concurrent map writes",
+    "fatal error: stack overflow",
+
+    "SIGSEGV at rip=0x00007f...",
+    "watchdog: soft lockup detected",
+
+    "SYSTEMD: Restarting service api.service",
+    "OOMKilled: container exceeded memory limit",
+
+    "audit.log: AVC denied { read } for pid=1337",
+    "seccomp violation: syscall blocked",
+
+    "BACKUP FAILED: snapshot inconsistent",
+    "DATA RACE DETECTED",
+
+    "∷ CONSENSUS ACHIEVED ∷",
+    "∷ STATE ROOT UPDATED ∷",
+    "∷ FINALITY REACHED ∷",
+    "ENV=production",
+    "DEBUG=false // DO NOT ENABLE",
+    "FEATURE_FLAG_NEW_LEDGER=true",
+    "REGION=eu-central-1",
+    "INSTANCE_ID=i-0f3a9c7e",
+
+    "DATABASE_URL=postgres://ledger_rw:******@10.0.2.14:5432/ledger",
+    "REDIS_URL=redis://:******@cache.internal:6379/0",
+    "JWT_PRIVATE_KEY=-----BEGIN RSA PRIVATE KEY-----",
+    "AWS_SECRET_ACCESS_KEY=AKIA************",
+    "S3_BUCKET=prod-backups-2024",
+
+    "[INFO] migration 184_add_nonce_index started",
+    "[WARN] migration took 742s",
+    "[ERROR] duplicate key value violates unique constraint",
+
+    "2025-11-18T03:14:07Z auth-service ERROR token validation failed",
+    "reason=signature_mismatch kid=prod-3",
+    "falling back to cached public key",
+
+    "panic: runtime error: invalid memory address",
+    "goroutine 81234 [running]:",
+    "sync.(*Mutex).Unlock(0x0)",
+
+    "java.lang.OutOfMemoryError: Java heap space",
+    "Dumping heap to /tmp/java_pid1337.hprof",
+
+    "UnhandledPromiseRejectionWarning: Error: timeout exceeded",
+    "process exiting with code 137",
+
+    "SIGSEGV at rip=0x00007f2cdeadbeef",
+    "stack trace truncated",
+
+    "OOMKilled: true",
+    "container=api-gateway memory=512Mi",
+
+    "SYSTEMD: api.service entered failed state",
+    "RestartSec=5s",
+
+    "SELECT id FROM transactions WHERE status='pending' FOR UPDATE;",
+    "deadlock detected",
+    "DETAIL: Process 441 waits for ShareLock",
+
+    "BEGIN;",
+    "UPDATE balances SET amount = amount - 1000000 WHERE user_id=42;",
+    "-- rollback executed",
+    "ROLLBACK;",
+
+    "ledger mismatch detected",
+    "expected_state_root=0x9fa3...",
+    "actual_state_root=0x0b12...",
+
+    "eth_sendRawTransaction failed",
+    "error: nonce too low",
+    "tx dropped from mempool",
+
+    "reorg depth=3",
+    "replaying blocks...",
+
+    "contract Vault::withdraw reverted",
+    "reason: arithmetic underflow",
+
+    "assembly {\n  revert(0, 0)\n}",
+
+    "selfdestruct scheduled",
+    "block=19400231",
+
+    "zkProof verification FAILED",
+    "constraint #418 unsatisfied",
+
+    "range_check_ptr overflow",
+
+    "bitcoin node: INVALID_BLOCK",
+    "reason=bad-txns-inputs-spent",
+
+    "OP_CHECKSIGVERIFY failed",
+
+    "kube-apiserver: etcd request timed out",
+    "etcd cluster unhealthy",
+
+    "kubectl delete pod auth-service-7c9f8 --force --grace-period=0",
+
+    "iptables flushed by automation",
+    "external traffic ACCEPTED",
+
+    "audit.log: AVC denied { write } for pid=8123 comm=\"nginx\"",
+    "SELinux enforcing",
+
+    "fsck.ext4: orphan inode found",
+    "filesystem mounted read-only",
+
+    "rsync --delete --partial /data /backup",
+    "backup incomplete",
+
+    "cron[1337]: job failed exit code 127",
+
+    "crashloopbackoff detected",
+
+    "CONFIG DRIFT DETECTED",
+    "terraform plan differs from state",
+
+    "state.lock acquired by pid=9981",
+    "lock timeout exceeded",
+
+    "vault: permission denied",
+    "token expired",
+
+    "ldap bind failed",
+    "invalid credentials",
+
+    "user=admin action=export_all status=200",
+
+    "ALERT: unusual withdrawal pattern detected",
+    "risk_score=0.91",
+
+    "fraud_engine escalation triggered",
+
+    "INCIDENT_ID=SEV-1",
+    "IMPACT: payments halted",
+
+    "HOTFIX_APPLIED=true",
+    "POSTMORTEM_REQUIRED",
+
+    "DO NOT SHARE THIS LOG",
+    "THIS FILE SHOULD NOT EXIST",
+
+    "partial memory dump:",
+    "00007ffd3a90  41 41 41 41 42 42 42",
+
+    "checksum mismatch",
+    "data corruption suspected",
+
+    "system entering degraded mode",
+
+    "fallback to legacy path",
+
+    "human intervention required",
+
+    "manual override enabled",
+
+    "who approved this?",
+
+    "we should not be seeing this",
+
+    "close incident",
+
+    "silence alerts",
+
+    "delete logs",
+    "∷ PRODUCTION STATE UNSTABLE ∷",
+    "∷ TRUST ASSUMPTIONS BROKEN ∷",
+    "∷ CONSISTENCY LOST ∷",
+    
+    "matrix.invert() // O(n^3)",
+    "d/dx (e^x) = e^x",
+    "∫ (1/x) dx = ln|x| + C",
+    "Eigenvalues: λ1, λ2... λn",
+    "det(A) != 0 // Invertible",
+    "f(x) = ∑ (1/n!) * x^n",
+    "H(ω) = 1 / (1 + jωRC)",
+    "A x = b // Solver started",
+    "∇ • E = ρ / ε₀",
+    "i² = -1 // Imaginary unit",
+    "float Q_rsqrt( float number )",
+    "void* ptr = malloc(1024);",
+    "0x5F3759DF // Magic",
+    "CORRUPTION DETECTED",
+    "RECALCULATING GEOMETRY...",
+    "RENDER_MATRIX: [OK]",
+    "∫ e^x dx = e^x + C",
+    "E = mc^2",
+    "d/dx (sin x) = cos x",
+    "A = [[1,0],[0,1]]",
+    "λx.x (Lambda Calculus)",
+    "P(A|B) = P(B|A)P(A)/P(B)",
+    "∇ • B = 0",
+    "i² = -1",
+    "∑ (1/n^2) = π^2/6",
+    "x = (-b ± √(b²-4ac)) / 2a",
+    "void* ptr = malloc(1024);",
+    "while(true) { fork(); }",
+    "0x5F3759DF // Magic",
+    "CORRUPTION DETECTED",
+    "RECALCULATING GEOMETRY...",
+    "RENDER_MATRIX: [OK]",
+    "SYSTEM.OVERRIDE(true)",
+    "Segmentation Fault (core dumped)",
+    "CONNECTING TO NODE...",
+    "ENCRYPTING PAYLOAD..."
+  ]
+}

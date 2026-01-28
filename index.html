@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подготовка к ОГЭ по информатике</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="rainCanvas"></canvas>
+    <canvas id="objCanvas"></canvas>
+    
+    <div id="damage-fx" class="damage-overlay"></div>
+
+    <div class="hud-overlay">
+        <div class="hud-text top-left">РЕЖИМ: <span id="mode-status" style="color:#0f0">ТРЕНИРОВКА</span></div>
+        <div class="hud-text bottom-right">
+            ЖИЗНИ: <span id="lives-display" style="color:#fff">---</span> | 
+            СЧЕТ: <span id="score-display" style="color:#fff">---</span>
+        </div>
+        <div class="scanlines"></div>
+        <div id="hardcore-timer" class="timer-display hidden">03:00.00</div>
+    </div>
+
+    <div id="lock-screen" class="hidden">
+        <div class="lock-box">
+            <h1 style="color:var(--danger); animation:glitch 0.3s infinite; margin-bottom:10px;">НАКАЗАНИЕ</h1>
+            <p id="lock-reason" style="color:#aaa; margin-bottom:20px;">ВЫ ОШИБЛИСЬ.</p>
+            <div id="mini-game-container" class="game-area"></div>
+            <p style="color:#666; font-size:0.8rem; margin-top:15px;">ПОБЕДА = 0 УРОНА<br>ПОРАЖЕНИЕ = -1 ЖИЗНЬ / -5 ОЧКОВ</p>
+        </div>
+    </div>
+
+    <div id="terminal-overlay" class="hidden">
+        <div class="terminal-window rounded">
+            <div class="term-header">
+                <span class="dot green"></span> root@oge-core:~
+            </div>
+            <div class="term-body" id="term-logs"></div>
+            <div class="term-menu hidden" id="term-menu">
+                <div class="menu-title">-- ВЫБРАТЬ МОДУЛЬ --</div>
+                <div id="term-tasks-list"></div>
+                <button class="term-close-btn" onclick="closeTerminal()">[EXIT]</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout">
+        <aside class="sidebar rounded">
+            <div class="logo-area rounded" onclick="goHome()">
+                <div id="title-main" class="cyber-title">ОСНОВНОЙ ГОСУДАРСТВЕННЫЙ ЭКЗАМЕН</div>
+                <div id="title-sub" class="cyber-subtitle">ПОДГОТОВКА</div>
+            </div>
+            
+            <div id="hardcore-controls">
+                <div id="btn-start-hc" class="hc-btn start" onclick="startRoulette()">
+                    РЕЖИМ ПРАКТИКИ
+                </div>
+                <div id="btn-stop-hc" class="hc-btn stop hidden" onclick="stopHardcore()">
+                    [X] ВЫХОД ИЗ ПРАКТИКИ
+                </div>
+            </div>
+
+            <div id="menu-container" class="menu-scroll"></div>
+        </aside>
+
+        <main class="content">
+            <div id="welcome-block" class="panel rounded active">
+                <h1 style="color:var(--primary); margin-bottom:20px;">/// INFO</h1>
+                <p style="margin-bottom: 15px; line-height: 1.5;">
+                    Как готовиться к ОГЭ по информатике? Вы открываете сборник заданий ОГЭ и понимаете, что кое-что успели забыть, а о чем-то не слышали вовсе. Тогда вы ищите в сети интернет теорию и понимаете, что не знаете, на каком сайте более подробно написана информация, в каком разделе искать сведения и другое.
+                </p>
+                <p style="margin-bottom: 15px; line-height: 1.5;">
+                    Предлагаю вам короткий и эффективный путь к успеху. Я разработала для вас разбор каждого задание ОГЭ по информатике. Здесь вы найдете теоретический материал, который содержит только то, что необходимо и достаточно для выполнения заданий ОГЭ по информатике, а далее, после изучения подробного материала, размещена практика для проверки себя в виде разбора заданий из ОГЭ по информатике.
+                </p>
+                <p style="margin-bottom: 15px; line-height: 1.5; color: var(--secondary);">
+                    В ОГЭ по информатике всего 16 заданий. Задания делятся на первую (тестовую) и вторую (часть решаемая на компьютере) часть. 1-12 задание - первая часть, в которой за каждое задание можно получить по одному баллу, 13-16 задание - вторая часть, которая решается в ручную на компьютере, а за каждое задание можно получить по два балла
+                </p>
+            </div>
+
+            <div id="task-block" class="panel rounded hidden">
+                <div class="task-header-row">
+                    <h2 id="task-header" class="task-h2">ЗАДАЧА</h2>
+                    <span id="roulette-badge" class="hidden">РАНДОМ</span>
+                </div>
+                <div class="nav-tabs">
+                    <button class="tab active" onclick="setTab('theory')">ТЕОРИЯ</button>
+                    <button class="tab" onclick="setTab('practice')">ЗАДАЧА</button>
+                </div>
+                <div id="content-theory" class="tab-body active"></div>
+                <div id="content-practice" class="tab-body">
+                    <div id="question-text" class="q-box rounded"></div>
+                    <div class="interact-area">
+                        <input type="text" id="inp-answer" class="rounded" placeholder="ОТВЕТ...">
+                        <button class="btn-primary rounded" onclick="verifyAnswer()">ПРОВЕРИТЬ</button>
+                    </div>
+                    <div id="res-msg"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="widgets-wrapper right-bottom">
+        <div id="widgets-panel" class="widgets-panel"></div>
+        <button class="widget-toggle" onclick="toggleWidgets()">?</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
