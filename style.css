@@ -164,6 +164,7 @@ body {
     justify-content: center;
     min-height: 3.5em;
     white-space: pre-wrap;
+    font-family: var(--font-ui), 'Noto Sans SC', 'Noto Sans JP', sans-serif; 
 }
 
 .cyber-subtitle {
@@ -1009,3 +1010,4 @@ input {
         align-items: center;
     }
 }
+
