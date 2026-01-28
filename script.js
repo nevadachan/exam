@@ -26,20 +26,20 @@ const docsDB = [
 </div>
 
 <!-- Overlays (Слои интерфейса) -->
-<div id="terminal-overlay">...</div> <!-- Эмулятор терминала -->
-<div id="lock-screen">...</div>      <!-- Экран блокировки/наказ��ния -->
+<div id="terminal-overlay">...</div> <!-- Терминал ерминала -->
+<div id="lock-screen">...</div>      <!-- Экран блокировки/наказания за ошибку -->
 <div class="hud-overlay">...</div>   <!-- HUD (жизни, таймер) -->`
     },
     {
         id: "css_vars",
         title: "CSS: Переменные",
-        desc: "Цветовая палитра в стиле Cyberpunk/Sci-Fi задается через CSS Variables для легкой смены темы.",
+        desc: "Цветовая палитра задается через CSS Variables для смены темы.",
         code: `:root {
     --bg: #050508;          /* Глубокий черный фон */
     --text: #c0c5ce;        /* Светло-серый текст */
-    --primary: #00ff9d;     /* Неоновый зеленый (успех/акцент) */
-    --secondary: #00b8ff;   /* Неоновый голубой (инфо) */
-    --danger: #ff0055;      /* Красный (ошибка/хардкор) */
+    --primary: #00ff9d;     /* Неоновый зеленый */
+    --secondary: #00b8ff;   /* Неоновый голубой */
+    --danger: #ff0055;      /* Красный */
     --font-ui: 'Share Tech Mono', monospace;
     --font-code: 'Fira Code', monospace;
 }`
@@ -55,7 +55,7 @@ const docsDB = [
         this.x = Math.floor(Math.random() * (w / 15)) * 15;
         this.y = Math.random() * -1000;
         this.type = Math.random() > 0.85 ? 'MATRIX' : 'TEXT';
-        // Берет случайную строку из базы данных
+        // Берет случайную строку из базы данных (data.js)
         this.text = bgSnippets[Math.floor(Math.random() * bgSnippets.length)]; 
     }
 
@@ -910,3 +910,4 @@ function showDocItem(item, el) {
         </div>
     `;
 }
+
