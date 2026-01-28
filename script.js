@@ -13,122 +13,278 @@ const ICON_HEIGHT = 100;
 const DECRYPT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
 const ZALGO_MARKS = ['\u030d', '\u030e', '\u0304', '\u0305', '\u033f', '\u0311'];
 
-// === NEW: DOCS DATA ===
+// === NEW: EXTENDED DOCS DATA ===
 const docsDB = [
     {
-        id: "html_struct",
-        title: "HTML: Структура",
-        desc: "Основной каркас сайта. Использует Canvas для фона, flexbox для макета (Sidebar + Content) и модальные окна.",
-        code: `<!-- Layout Structure -->
-<div class="layout">
-  <aside class="sidebar">...</aside> <!-- Меню -->
-  <main class="content">...</main> <!-- Контент задач -->
-</div>
+        id: "arch_overview",
+        title: "00. Архитектура",
+        desc: "Сайт работает как SPA (Single Page Application) без фреймворков. Вся логика содержится в одном файле script.js, который управляет состоянием (lives, score, mode), рендерингом DOM и отрисовкой Canvas.",
+        code: `// Глобальное состояние приложения
+let db = null;           // База данных заданий (из JSON)
+let currentTask = null;  // Текущая активная задача
+let isHardcore = false;  // Режим: Тренировка / Хардкор
+let lives = 5;           // Количество жизней
+let score = 0;           // Текущий счет
+let hcTimer = null;      // ID интервала таймера
 
-<!-- Overlays (Слои интерфейса) -->
-<div id="terminal-overlay">...</div> <!-- Терминал ерминала -->
-<div id="lock-screen">...</div>      <!-- Экран блокировки/наказания за ошибку -->
-<div class="hud-overlay">...</div>   <!-- HUD (жизни, таймер) -->`
+window.onload = async () => {
+    await loadData();      // 1. Загрузка JSON
+    initTitleSystem();     // 2. Запуск эффектов заголовка
+    initUltimateSystem();  // 3. Запуск графического движка (Canvas)
+};`
     },
     {
-        id: "css_vars",
-        title: "CSS: Переменные",
-        desc: "Цветовая палитра задается через CSS Variables для смены темы.",
+        id: "html_layout",
+        title: "01. HTML: Структура",
+        desc: "Разметка разделена на слои. Z-index управляет перекрытием: Canvas (фон) < Контент < Интерфейс (HUD) < Модальные окна (Lock Screen, Terminal).",
+        code: `<body>
+    <!-- 1. Фоновый слой (Canvas) -->
+    <canvas id="rainCanvas"></canvas> <!-- Матрица -->
+    <canvas id="objCanvas"></canvas>  <!-- 3D объекты -->
+    
+    <!-- 2. Слой HUD (Интерфейс поверх всего) -->
+    <div class="hud-overlay">
+        <div class="scanlines"></div> <!-- Эффект старого монитора -->
+        <div class="hud-text">...</div>
+    </div>
+
+    <!-- 3. Слой Блокировки (Наказание) -->
+    <div id="lock-screen" class="hidden">...</div>
+
+    <!-- 4. Основной макет (Flexbox) -->
+    <div class="layout">
+        <aside class="sidebar">...</aside> <!-- Меню навигации -->
+        <main class="content">...</main>   <!-- Область контента -->
+    </div>
+</body>`
+    },
+    {
+        id: "css_visuals",
+        title: "02. CSS: Визуал",
+        desc: "Использование CSS-переменных для темизации и эффекты CRT-монитора через `scanlines`.",
         code: `:root {
-    --bg: #050508;          /* Глубокий черный фон */
-    --text: #c0c5ce;        /* Светло-серый текст */
-    --primary: #00ff9d;     /* Неоновый зеленый */
-    --secondary: #00b8ff;   /* Неоновый голубой */
-    --danger: #ff0055;      /* Красный */
-    --font-ui: 'Share Tech Mono', monospace;
-    --font-code: 'Fira Code', monospace;
+    --primary: #00ff9d;   /* Основной неоновый цвет */
+    --bg: #050508;        /* Глубокий черный */
+    --font-ui: 'Share Tech Mono'; /* Шрифт интерфейса */
+}
+
+/* Эффект старого монитора */
+.scanlines {
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.3) 3px
+    );
+    pointer-events: none; /* Пропускает клики сквозь себя */
+    z-index: 50;
+}
+
+/* Анимация тряски экрана при уроне */
+.shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}`
+    },
+    {
+        id: "js_bg_engine",
+        title: "03. JS: Графика",
+        desc: "Функция `initUltimateSystem` запускает цикл `requestAnimationFrame`. В нем каждый кадр очищается Canvas и перерисовываются все объекты.",
+        code: `function initUltimateSystem() {
+    // Инициализация контекстов 2D
+    const ctxRain = rainCanvas.getContext('2d');
+    const ctxObj = objCanvas.getContext('2d');
+
+    // Главный цикл рендеринга (60 FPS)
+    function loop() {
+        ctxRain.clearRect(0, 0, w, h);
+        ctxObj.clearRect(0, 0, w, h);
+
+        // Обновление и отрисовка компонентов
+        rainItems.forEach(r => { r.update(); r.draw(); }); // Матричный дождь
+        floaters.forEach(f => { f.update(); f.draw(); });  // Парящий код
+        
+        renderLorenz();      // Математический аттрактор
+        renderDigitalWave(); // Волновая сетка
+
+        requestAnimationFrame(loop);
+    }
+    loop();
 }`
     },
     {
         id: "js_matrix",
-        title: "JS: Матричный Дождь",
-        desc: "Класс RainDrop отвечает за отрисовку падающих символов на Canvas. Использует данные из background_data.json.",
+        title: "04. JS: Матричный Дождь",
+        desc: "Класс `RainDrop`. Каждый 'падающий' элемент имеет свою скорость, координаты и тип (простой текст или меняющаяся матрица).",
         code: `class RainDrop {
-    constructor() { this.reset(); }
-
-    reset() {
-        this.x = Math.floor(Math.random() * (w / 15)) * 15;
-        this.y = Math.random() * -1000;
-        this.type = Math.random() > 0.85 ? 'MATRIX' : 'TEXT';
-        // Берет случайную строку из базы данных (data.js)
-        this.text = bgSnippets[Math.floor(Math.random() * bgSnippets.length)]; 
+    update() {
+        this.y += this.speed; // Движение вниз
+        // Если улетел за экран - сброс наверх
+        if (this.y > h + 100) this.reset();
+        
+        // Эффект перебора матрицы: смена символов
+        if (this.type === 'MATRIX' && Math.random() > 0.9) {
+            this.changeRandomChar(); 
+        }
     }
 
     draw() {
         ctxRain.fillStyle = "#00ff9d";
-        ctxRain.globalAlpha = this.opacity;
-        // Отрисовка текста или матрицы чисел
-        if (this.type === 'MATRIX') { ... } 
-        else { ctxRain.fillText(this.text, this.x, this.y); }
+        // Отрисовка столбца цифр
+        for (let r = 0; r < this.dim; r++) {
+            ctxRain.fillText(this.mData[r], this.x, this.y + r*14);
+        }
     }
 }`
     },
     {
-        id: "js_slot",
-        title: "JS: Слот-Машина",
-        desc: "Логика мини-игры 'Наказание'. Определяет выигрыш (восстановление жизней) или проигрыш (урон).",
-        code: `window.spinSlots = () => {
-    const r = Math.random();
+        id: "js_lorenz",
+        title: "05. JS: Математика (Лоренц)",
+        desc: "Визуализация Аттрактора Лоренца — системы дифференциальных уравнений. Точки рисуются в реальном времени.",
+        code: `// Константы хаоса
+const sigma = 10, rho = 28, beta = 8/3, dt = 0.01;
+
+function renderLorenz() {
+    // Вычисление следующей точки по формулам Лоренца
+    let dx = (sigma * (ly - lx)) * dt;
+    let dy = (lx * (rho - lz) - ly) * dt;
+    let dz = (lx * ly - beta * lz) * dt;
     
-    // 2% шанс на джекпот (777)
-    if (r < 0.02) { 
-        result = ["7️⃣", "7️⃣", "7️⃣"]; // +2 жизни
-    } 
-    // 38% шанс на обычный выигрыш (3 одинаковых)
-    else if (r < 0.40) { 
-        result = [winSym, winSym, winSym]; // Жизнь сохранена
-    } 
-    // Проигрыш (разные символы)
-    else { 
-        result = [sym1, sym2, sym3]; // -1 жизнь
+    lx += dx; ly += dy; lz += dz;
+
+    // Вращение 3D координат для проекции на 2D экран
+    let rx = p.x * Math.cos(angle) - p.z * Math.sin(angle);
+    ctxObj.fillText(".", centerX + rx * scale, centerY - p.y * scale);
+}`
+    },
+    {
+        id: "js_hardcore",
+        title: "06. JS: Режим практики",
+        desc: "Логика 'рулетки' заданий. Выбирает случайное задание, запускает таймер. При ошибке блокирует интерфейс.",
+        code: `function startRoulette() {
+    isHardcore = true;
+    lives = 5;
+    
+    // Эффект быстрой смены названий перед выбором
+    const interval = setInterval(() => {
+        const rnd = allTasks[Math.floor(Math.random() * allTasks.length)];
+        document.getElementById('task-header').innerText = rnd.title;
+        // ...
+    }, 80);
+    
+    // После выбора - загрузка задачи и старт таймера
+    loadTask(selectedTask, true);
+    startTimer();
+}`
+    },
+    {
+        id: "js_timer",
+        title: "07. JS: Таймер обратного отсчета",
+        desc: "Работает на `setInterval` с шагом 10мс для отображения миллисекунд. При достижении 0 вызывает Game Over.",
+        code: `function startTimer() {
+    timeLeft = 18000; // 3 минуты в сотых долях секунды
+    
+    hcTimer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay(); // Форматирует MM:SS.ms
+        
+        if (timeLeft <= 0) {
+            clearInterval(hcTimer);
+            triggerMiniGame("ВРЕМЯ ВЫШЛО"); // Наказание
+        }
+    }, 10);
+}`
+    },
+    {
+        id: "js_punish",
+        title: "08. JS: Система наказаний",
+        desc: "При ошибке вызывается `triggerMiniGame`. Показывает оверлей 'Lock Screen' и инициализирует слот-машину.",
+        code: `function triggerMiniGame(reason) {
+    isBlocked = true; // Блокировка ввода ответов
+    const screen = document.getElementById('lock-screen');
+    screen.classList.remove('hidden'); // Показ красного экрана
+    
+    // Генерация DOM для слотов
+    initSlots(document.getElementById('mini-game-container'));
+}
+
+function takeDamage() {
+    lives--; // Снятие жизни
+    document.body.classList.add('shake'); // Тряска экрана
+    
+    if (lives <= 0) {
+        // Логика полного проигрыша
+        stopHardcore();
     }
+}`
+    },
+    {
+        id: "js_slots",
+        title: "09. JS: Слот-машина",
+        desc: "Эмуляция казино. Результат предопределен математически до начала вращения анимации.",
+        code: `window.spinSlots = () => {
+    // 1. Определение результата (RNG)
+    const r = Math.random();
+    let result = [];
     
-    // Запуск анимации вращения CSS transform
-    startReelAnimation(result);
+    if (r < 0.40) { 
+        // 40% шанс на победу (спасение жизни)
+        result = [sym, sym, sym]; 
+    } else {
+        // 60% шанс на проигрыш (урон)
+        result = [sym1, sym2, sym3]; 
+    }
+
+    // 2. Анимация барабанов через CSS Transform
+    // Мы создаем длинную ленту символов и сдвигаем её
+    reel.style.transform = "translateY(0px)"; 
+    // transition обеспечивает плавность остановки
 };`
     },
     {
-        id: "js_decrypt",
-        title: "JS: Эффект дешифровки",
-        desc: "Визуальный эффект 'подбора пароля' для текста заголовков.",
-        code: `function decryptEffect(el, txt) {
+        id: "js_terminal",
+        title: "10. JS: Терминал",
+        desc: "Фейковый CLI интерфейс. Использует рекурсивную функцию `print` для эффекта печатания текста построчно.",
+        code: `function openTerminal(mod) {
+    const lines = [\`root@oge:~$ \${mod.cmd}\`, \`> Loading...\`, \`> Done.\`];
     let i = 0;
-    const interval = setInterval(() => {
-        // Заменяет буквы на случайные символы, пока не дойдет до i
-        el.innerText = txt.split("").map((c, x) =>
-            x < i ? c : DECRYPT_CHARS[Math.floor(Math.random() * DECRYPT_CHARS.length)]
-        ).join("");
-        
-        if (i >= txt.length) clearInterval(interval);
-        i += 1;
-    }, 30);
+
+    function print() {
+        if (i < lines.length) {
+            // Добавление строки в DOM
+            logs.appendChild(createLine(lines[i]));
+            i++;
+            setTimeout(print, 100); // Задержка между строками
+        } else {
+            // Когда все напечатано - показать меню выбора задач
+            showTaskSelection(mod);
+        }
+    }
+    print();
 }`
     },
     {
-        id: "js_router",
-        title: "JS: Навигация",
-        desc: "Загрузка задач из JSON и их отображение без перезагрузки страницы (SPA).",
-        code: `function loadTask(task, isHC) {
-    currentTask = task;
-    // Скрытие приветствия, показ блока задачи
-    document.getElementById('welcome-block').classList.add('hidden');
-    document.getElementById('task-block').classList.remove('hidden');
+        id: "js_decrypt",
+        title: "11. JS: Эффект дешифровки",
+        desc: "Визуальный эффект подбора символов для заголовков.",
+        code: `function decryptEffect(element, text) {
+    const chars = "ABC...123...@#$";
+    let i = 0;
     
-    // Заполнение контента
-    document.getElementById('content-theory').innerHTML = task.theory;
-    document.getElementById('question-text').innerHTML = task.question;
-    
-    // Запуск эффекта текста на заголовке
-    decryptEffect(document.getElementById('task-header'), task.title);
+    const interval = setInterval(() => {
+        // Первые i символов - верные, остальные - случайный шум
+        element.innerText = text.split("").map((char, index) => {
+            if (index < i) return char;
+            return chars[Math.floor(Math.random() * chars.length)];
+        }).join("");
+        
+        if (i >= text.length) clearInterval(interval);
+        i++;
+    }, 30);
 }`
     }
 ];
 
+// === SYSTEM INITIALIZATION ===
 window.onload = async () => {
     await loadData();
     initTitleSystem();
@@ -147,7 +303,7 @@ async function loadData() {
         renderMenu();
         renderWidgets();
     } catch (e) {
-        document.getElementById('menu-container').innerHTML = "ERR_DATA_LOAD";
+        document.getElementById('menu-container').innerHTML = "ERR_DATA_LOAD: " + e.message;
     }
 }
 
@@ -910,4 +1066,3 @@ function showDocItem(item, el) {
         </div>
     `;
 }
-
