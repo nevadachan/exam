@@ -189,6 +189,7 @@ body {
     border-radius: 8px;
     transition: 0.2s;
     font-size: 0.9rem;
+    border: 1px solid #333;
 }
 
 .hc-btn.start {
@@ -212,6 +213,15 @@ body {
 .hc-btn.stop:hover {
     border-color: #fff;
     color: #fff;
+}
+
+.hc-btn.doc-btn {
+    background: rgba(0, 184, 255, 0.05);
+}
+.hc-btn.doc-btn:hover {
+    background: var(--secondary);
+    color: #000 !important;
+    box-shadow: 0 0 15px var(--secondary);
 }
 
 #menu-container {
@@ -373,7 +383,8 @@ input {
 }
 
 #terminal-overlay,
-#lock-screen {
+#lock-screen,
+#doc-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -388,6 +399,11 @@ input {
 
 #terminal-overlay {
     background: rgba(0, 0, 0, 0.85);
+}
+
+#doc-overlay {
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 6000;
 }
 
 #lock-screen {
@@ -407,6 +423,104 @@ input {
     flex-direction: column;
     font-family: var(--font-code);
     position: relative;
+}
+
+/* Styles for Docs Window */
+.doc-window {
+    width: 90vw;
+    height: 85vh;
+    background: #0d1117;
+    border: 1px solid var(--secondary);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 50px rgba(0, 184, 255, 0.2);
+    font-family: var(--font-code);
+}
+
+.doc-header {
+    background: #161b22;
+    padding: 10px 20px;
+    border-bottom: 1px solid #30363d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--secondary);
+    font-weight: bold;
+}
+
+.doc-close-btn {
+    background: none;
+    border: none;
+    color: #8b949e;
+    font-family: var(--font-code);
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+.doc-close-btn:hover { color: #fff; }
+
+.doc-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.doc-sidebar {
+    width: 250px;
+    background: #0d1117;
+    border-right: 1px solid #30363d;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.doc-nav-item {
+    padding: 10px;
+    color: #8b949e;
+    cursor: pointer;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    margin-bottom: 2px;
+}
+.doc-nav-item:hover {
+    background: #161b22;
+    color: var(--secondary);
+}
+.doc-nav-item.active {
+    background: rgba(0, 184, 255, 0.1);
+    color: #fff;
+    border-left: 2px solid var(--secondary);
+}
+
+.doc-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    background: #0d1117;
+    color: #c9d1d9;
+}
+
+.doc-block {
+    margin-bottom: 30px;
+}
+.doc-block h3 {
+    color: var(--secondary);
+    margin-bottom: 10px;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 5px;
+}
+.doc-desc {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #8b949e;
+}
+.doc-code {
+    background: #000;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    color: #a5d6ff;
+    white-space: pre-wrap;
 }
 
 .term-header {
