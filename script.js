@@ -791,7 +791,15 @@ function initTitleSystem() {
 }
 
 function cycleTitle(mElement, sElement) {
-    const lang = TITLE_LANGS[Math.floor(Math.random() * TITLE_LANGS.length)];
+    let lang;
+
+    if (Math.random() < 0.5) {
+        lang = TITLE_LANGS[0];
+    } else {
+        const otherLangs = TITLE_LANGS.slice(1);
+        lang = otherLangs[Math.floor(Math.random() * otherLangs.length)];
+    }
+    
     decryptEffect(mElement, lang.m);
     setTimeout(() => decryptEffect(sElement, lang.s), 200);
 }
@@ -1082,3 +1090,4 @@ function showDocItem(item, el) {
         </div>
     `;
 }
+
