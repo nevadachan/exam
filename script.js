@@ -9,11 +9,24 @@ let timeLeft = 18000;
 let isBlocked = false;
 
 const SYMBOLS = ["🍒", "🍋", "🍇", "💎", "7️⃣", "🔔"];
-const ICON_HEIGHT = 100;
+const ICON_HEIGHT = 83.33; 
 const DECRYPT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
 const ZALGO_MARKS = ['\u030d', '\u030e', '\u0304', '\u0305', '\u033f', '\u0311'];
 
-// === NEW: EXTENDED DOCS DATA ===
+const TITLE_LANGS = [
+    { m: "ОСНОВНОЙ ГОСУДАРСТВЕННЫЙ ЭКЗАМЕН", s: "ПОДГОТОВКА" },
+    { m: "BASIC STATE EXAMINATION", s: "PREPARATION" },
+    { m: "EXAMEN D'ÉTAT DE BASE", s: "PRÉPARATION" },
+    { m: "GRUNDLEGENDE STAATSPRÜFUNG", s: "VORBEREITUNG" },
+    { m: "EXAMEN ESTATAL BÁSICO", s: "PREPARACIÓN" },
+    { m: "ESAME DI STATO FONDAMENTALE", s: "PREPARAZIONE" },
+    { m: "基本国家試験", s: "準備" },
+    { m: "基础国家考试", s: "准备" },
+    { m: "기본 국가 시험", s: "준비" },
+    { m: "EXAME ESTADUAL BÁSICO", s: "PREPARAÇÃO" }
+];
+
+// === DOCS DATA ===
 const docsDB = [
     {
         id: "arch_overview",
@@ -158,7 +171,7 @@ function renderLorenz() {
     },
     {
         id: "js_hardcore",
-        title: "06. JS: Режим практики",
+        title: "06. JS: Хардкор режим",
         desc: "Логика 'рулетки' заданий. Выбирает случайное задание, запускает таймер. При ошибке блокирует интерфейс.",
         code: `function startRoulette() {
     isHardcore = true;
@@ -284,7 +297,6 @@ function takeDamage() {
     }
 ];
 
-// === SYSTEM INITIALIZATION ===
 window.onload = async () => {
     await loadData();
     initTitleSystem();
@@ -303,7 +315,7 @@ async function loadData() {
         renderMenu();
         renderWidgets();
     } catch (e) {
-        document.getElementById('menu-container').innerHTML = "ERR_DATA_LOAD: " + e.message;
+        document.getElementById('menu-container').innerHTML = "ERR_DATA_LOAD";
     }
 }
 
@@ -316,9 +328,7 @@ function startRoulette() {
 
     document.getElementById('btn-start-hc').classList.add('hidden');
     document.getElementById('btn-stop-hc').classList.remove('hidden');
-    document.getElementById('mode-status').innerHTML = "HARDCORE";
-    document.getElementById('mode-status').style.color = "#ff0055";
-
+    
     spinNextTask();
 }
 
@@ -350,8 +360,7 @@ function stopHardcore() {
     updateMenuLockState();
     document.getElementById('btn-start-hc').classList.remove('hidden');
     document.getElementById('btn-stop-hc').classList.add('hidden');
-    document.getElementById('mode-status').innerHTML = "TRAINING";
-    document.getElementById('mode-status').style.color = "#0f0";
+    
     document.getElementById('hardcore-timer').classList.add('hidden');
     document.getElementById('roulette-badge').classList.add('hidden');
     document.getElementById('lives-display').innerText = "---";
@@ -773,11 +782,18 @@ function toZalgo(t) {
 function initTitleSystem() {
     const m = document.getElementById('title-main');
     const s = document.getElementById('title-sub');
+    
+    cycleTitle(m, s);
+
     setInterval(() => {
-        const t = { m: "ОСНОВНОЙ ГОСУДАРСТВЕННЫЙ ЭКЗАМЕН", s: "ПОДГОТОВКА" };
-        decryptEffect(m, t.m);
-        setTimeout(() => decryptEffect(s, t.s), 200);
-    }, 8000);
+        cycleTitle(m, s);
+    }, 6000); 
+}
+
+function cycleTitle(mElement, sElement) {
+    const lang = TITLE_LANGS[Math.floor(Math.random() * TITLE_LANGS.length)];
+    decryptEffect(mElement, lang.m);
+    setTimeout(() => decryptEffect(sElement, lang.s), 200);
 }
 
 function initUltimateSystem() {
