@@ -13,6 +13,122 @@ const ICON_HEIGHT = 100;
 const DECRYPT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
 const ZALGO_MARKS = ['\u030d', '\u030e', '\u0304', '\u0305', '\u033f', '\u0311'];
 
+// === NEW: DOCS DATA ===
+const docsDB = [
+    {
+        id: "html_struct",
+        title: "HTML: Структура",
+        desc: "Основной каркас сайта. Использует Canvas для фона, flexbox для макета (Sidebar + Content) и модальные окна.",
+        code: `<!-- Layout Structure -->
+<div class="layout">
+  <aside class="sidebar">...</aside> <!-- Меню -->
+  <main class="content">...</main> <!-- Контент задач -->
+</div>
+
+<!-- Overlays (Слои интерфейса) -->
+<div id="terminal-overlay">...</div> <!-- Эмулятор терминала -->
+<div id="lock-screen">...</div>      <!-- Экран блокировки/наказ��ния -->
+<div class="hud-overlay">...</div>   <!-- HUD (жизни, таймер) -->`
+    },
+    {
+        id: "css_vars",
+        title: "CSS: Переменные",
+        desc: "Цветовая палитра в стиле Cyberpunk/Sci-Fi задается через CSS Variables для легкой смены темы.",
+        code: `:root {
+    --bg: #050508;          /* Глубокий черный фон */
+    --text: #c0c5ce;        /* Светло-серый текст */
+    --primary: #00ff9d;     /* Неоновый зеленый (успех/акцент) */
+    --secondary: #00b8ff;   /* Неоновый голубой (инфо) */
+    --danger: #ff0055;      /* Красный (ошибка/хардкор) */
+    --font-ui: 'Share Tech Mono', monospace;
+    --font-code: 'Fira Code', monospace;
+}`
+    },
+    {
+        id: "js_matrix",
+        title: "JS: Матричный Дождь",
+        desc: "Класс RainDrop отвечает за отрисовку падающих символов на Canvas. Использует данные из background_data.json.",
+        code: `class RainDrop {
+    constructor() { this.reset(); }
+
+    reset() {
+        this.x = Math.floor(Math.random() * (w / 15)) * 15;
+        this.y = Math.random() * -1000;
+        this.type = Math.random() > 0.85 ? 'MATRIX' : 'TEXT';
+        // Берет случайную строку из базы данных
+        this.text = bgSnippets[Math.floor(Math.random() * bgSnippets.length)]; 
+    }
+
+    draw() {
+        ctxRain.fillStyle = "#00ff9d";
+        ctxRain.globalAlpha = this.opacity;
+        // Отрисовка текста или матрицы чисел
+        if (this.type === 'MATRIX') { ... } 
+        else { ctxRain.fillText(this.text, this.x, this.y); }
+    }
+}`
+    },
+    {
+        id: "js_slot",
+        title: "JS: Слот-Машина",
+        desc: "Логика мини-игры 'Наказание'. Определяет выигрыш (восстановление жизней) или проигрыш (урон).",
+        code: `window.spinSlots = () => {
+    const r = Math.random();
+    
+    // 2% шанс на джекпот (777)
+    if (r < 0.02) { 
+        result = ["7️⃣", "7️⃣", "7️⃣"]; // +2 жизни
+    } 
+    // 38% шанс на обычный выигрыш (3 одинаковых)
+    else if (r < 0.40) { 
+        result = [winSym, winSym, winSym]; // Жизнь сохранена
+    } 
+    // Проигрыш (разные символы)
+    else { 
+        result = [sym1, sym2, sym3]; // -1 жизнь
+    }
+    
+    // Запуск анимации вращения CSS transform
+    startReelAnimation(result);
+};`
+    },
+    {
+        id: "js_decrypt",
+        title: "JS: Эффект дешифровки",
+        desc: "Визуальный эффект 'подбора пароля' для текста заголовков.",
+        code: `function decryptEffect(el, txt) {
+    let i = 0;
+    const interval = setInterval(() => {
+        // Заменяет буквы на случайные символы, пока не дойдет до i
+        el.innerText = txt.split("").map((c, x) =>
+            x < i ? c : DECRYPT_CHARS[Math.floor(Math.random() * DECRYPT_CHARS.length)]
+        ).join("");
+        
+        if (i >= txt.length) clearInterval(interval);
+        i += 1;
+    }, 30);
+}`
+    },
+    {
+        id: "js_router",
+        title: "JS: Навигация",
+        desc: "Загрузка задач из JSON и их отображение без перезагрузки страницы (SPA).",
+        code: `function loadTask(task, isHC) {
+    currentTask = task;
+    // Скрытие приветствия, показ блока задачи
+    document.getElementById('welcome-block').classList.add('hidden');
+    document.getElementById('task-block').classList.remove('hidden');
+    
+    // Заполнение контента
+    document.getElementById('content-theory').innerHTML = task.theory;
+    document.getElementById('question-text').innerHTML = task.question;
+    
+    // Запуск эффекта текста на заголовке
+    decryptEffect(document.getElementById('task-header'), task.title);
+}`
+    }
+];
+
 window.onload = async () => {
     await loadData();
     initTitleSystem();
@@ -757,4 +873,40 @@ function initUltimateSystem() {
     }
 
     loop();
+}
+
+// === DOCS FUNCTIONS ===
+function openDocs() {
+    document.getElementById('doc-overlay').classList.remove('hidden');
+    renderDocsNav();
+}
+
+function closeDocs() {
+    document.getElementById('doc-overlay').classList.add('hidden');
+}
+
+function renderDocsNav() {
+    const nav = document.getElementById('doc-nav');
+    nav.innerHTML = '';
+    docsDB.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'doc-nav-item';
+        div.innerText = item.title;
+        div.onclick = () => showDocItem(item, div);
+        nav.appendChild(div);
+    });
+}
+
+function showDocItem(item, el) {
+    document.querySelectorAll('.doc-nav-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    
+    const viewer = document.getElementById('doc-viewer');
+    viewer.innerHTML = `
+        <div class="doc-block">
+            <h3>${item.title}</h3>
+            <div class="doc-desc">${item.desc}</div>
+            <pre class="doc-code">${item.code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
+        </div>
+    `;
 }
