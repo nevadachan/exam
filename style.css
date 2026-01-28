@@ -23,7 +23,7 @@ body {
     color: var(--text);
     font-family: var(--font-ui);
     height: 100vh;
-    overflow: hidden;
+    overflow: hidden; /* Важно для десктопа, на мобильном может потребоваться auto */
     user-select: none;
     position: relative;
 }
@@ -134,6 +134,7 @@ body {
     padding: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     height: 100%;
+    overflow: hidden; /* Чтобы скролл был только внутри контейнера меню */
 }
 
 .logo-area {
@@ -306,6 +307,8 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    flex-wrap: wrap; /* Позволяет заголовку переноситься */
+    gap: 10px;
 }
 
 #roulette-badge {
@@ -322,6 +325,7 @@ body {
     gap: 10px;
     margin-bottom: 20px;
     border-bottom: 1px solid #333;
+    flex-wrap: wrap;
 }
 
 .tab {
@@ -332,6 +336,8 @@ body {
     font-family: inherit;
     font-size: 1.1rem;
     cursor: pointer;
+    flex: 1; /* Растягиваем табы на мобилке */
+    white-space: nowrap;
 }
 
 .tab.active {
@@ -353,6 +359,7 @@ body {
     padding: 20px;
     border-left: 3px solid var(--secondary);
     margin-bottom: 20px;
+    word-wrap: break-word; /* Чтобы длинные слова не ломали верстку */
 }
 
 input {
@@ -367,6 +374,12 @@ input {
     margin-bottom: 10px;
 }
 
+.interact-area {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* Чтобы кнопка переносилась под инпут на очень узких экранах */
+}
+
 .btn-primary {
     background: var(--primary);
     color: #000;
@@ -375,6 +388,7 @@ input {
     font-weight: bold;
     cursor: pointer;
     transition: 0.2s;
+    white-space: nowrap;
 }
 
 .btn-primary:hover {
@@ -395,6 +409,7 @@ input {
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(5px);
+    padding: 10px; /* Отступ чтобы окна не прилипали к краям мобилки */
 }
 
 #terminal-overlay {
@@ -413,7 +428,7 @@ input {
 
 .terminal-window {
     width: 650px;
-    max-width: 95vw;
+    max-width: 100%; /* Резиновая ширина */
     height: 450px;
     max-height: 90vh;
     background: #0a0c10;
@@ -427,8 +442,8 @@ input {
 
 /* Styles for Docs Window */
 .doc-window {
-    width: 90vw;
-    height: 85vh;
+    width: 95vw;
+    height: 90vh;
     background: #0d1117;
     border: 1px solid var(--secondary);
     display: flex;
@@ -446,6 +461,7 @@ input {
     align-items: center;
     color: var(--secondary);
     font-weight: bold;
+    font-size: 0.9rem; /* Чуть меньше на мобилках */
 }
 
 .doc-close-btn {
@@ -455,6 +471,7 @@ input {
     font-family: var(--font-code);
     cursor: pointer;
     font-size: 1.1rem;
+    padding: 5px;
 }
 .doc-close-btn:hover { color: #fff; }
 
@@ -466,6 +483,7 @@ input {
 
 .doc-sidebar {
     width: 250px;
+    min-width: 200px; /* Чтобы не схлопывался */
     background: #0d1117;
     border-right: 1px solid #30363d;
     padding: 10px;
@@ -506,11 +524,13 @@ input {
     margin-bottom: 10px;
     border-bottom: 1px solid #30363d;
     padding-bottom: 5px;
+    font-size: 1.1rem;
 }
 .doc-desc {
     margin-bottom: 15px;
     line-height: 1.6;
     color: #8b949e;
+    font-size: 0.9rem;
 }
 .doc-code {
     background: #000;
@@ -518,9 +538,10 @@ input {
     border-radius: 6px;
     border: 1px solid #30363d;
     overflow-x: auto;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #a5d6ff;
     white-space: pre-wrap;
+    max-width: 100%; /* Чтобы код не распира�� экран */
 }
 
 .term-header {
@@ -569,6 +590,7 @@ input {
     margin-bottom: 5px;
     border-radius: 6px;
     color: #ccc;
+    font-size: 0.9rem;
 }
 
 .term-task-link:hover {
@@ -590,15 +612,18 @@ input {
 .lock-box {
     text-align: center;
     border: 1px solid #333;
-    padding: 40px;
+    padding: 20px; /* Уменьшены паддинги для мобилок */
     background: #0a0a0a;
     border-radius: 16px;
     box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
     width: 500px;
-    max-width: 90vw;
+    max-width: 100%;
     position: relative;
     overflow: hidden;
     border-top: 4px solid var(--danger);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .game-area {
@@ -606,6 +631,7 @@ input {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }
 
 .slot-machine {
@@ -614,7 +640,7 @@ input {
     background: linear-gradient(135deg, #222, #111);
     border: 3px solid #444;
     border-radius: 15px;
-    padding: 20px;
+    padding: 15px;
     box-shadow: 0 0 30px #000, inset 0 0 50px rgba(0, 0, 0, 0.8);
     position: relative;
 }
@@ -623,7 +649,7 @@ input {
     background: #000;
     border: 2px solid #555;
     border-radius: 8px;
-    height: 300px;
+    height: 250px; /* Уменьшенная высота */
     display: flex;
     overflow: hidden;
     position: relative;
@@ -647,12 +673,12 @@ input {
 }
 
 .slot-icon {
-    height: 100px;
+    height: 83.33px; /* ICON_HEIGHT подстроился под 250px / 3 */
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3.5rem;
+    font-size: 2.5rem; /* Меньше шрифт */
     filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.1));
 }
 
@@ -683,7 +709,7 @@ input {
     top: 0;
     left: 0;
     width: 100%;
-    height: 80px;
+    height: 60px;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
     z-index: 5;
     pointer-events: none;
@@ -694,7 +720,7 @@ input {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 80px;
+    height: 60px;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
     z-index: 5;
     pointer-events: none;
@@ -703,7 +729,7 @@ input {
 .slot-controls {
     margin-top: 15px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center; /* Центрируем кнопку */
     align-items: center;
     background: #151515;
     padding: 10px;
@@ -715,7 +741,7 @@ input {
     background: linear-gradient(to bottom, var(--danger), #a00);
     border: none;
     color: #fff;
-    padding: 10px 25px;
+    padding: 10px 40px;
     font-weight: bold;
     font-family: var(--font-ui);
     font-size: 1.1rem;
@@ -723,6 +749,7 @@ input {
     cursor: pointer;
     box-shadow: 0 4px 0 #600;
     transition: 0.1s;
+    width: 100%;
 }
 
 .btn-slot-spin:active {
@@ -757,7 +784,7 @@ input {
 }
 
 .result-text {
-    font-size: 3rem;
+    font-size: 2.5rem; /* Чуть меньше */
     font-weight: bold;
     text-transform: uppercase;
     transform: scale(0.5);
@@ -845,5 +872,140 @@ input {
     }
     40%, 60% {
         transform: translate3d(4px, 0, 0);
+    }
+}
+
+/* =========================================
+   MEDIA QUERIES (RESPONSIVE)
+   ========================================= */
+
+@media (max-width: 900px) {
+    body {
+        height: auto;
+        overflow-y: auto; /* Включаем скролл для всей страницы */
+    }
+
+    .layout {
+        flex-direction: column; /* Сайдбар сверху, контент снизу */
+        height: auto;
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-width: unset;
+        height: auto;
+        max-height: 400px; /* Ограничиваем высоту меню */
+    }
+
+    .logo-area {
+        height: 80px;
+        min-height: 80px;
+        flex-direction: row;
+        align-items: center;
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .cyber-title {
+        min-height: auto;
+        font-size: 1rem;
+        width: auto;
+        margin-bottom: 0;
+        text-align: left;
+    }
+
+    .cyber-subtitle {
+        display: none; /* Скрываем подзаголовок на мобилках */
+    }
+
+    .content {
+        overflow-y: visible; /* Контент просто растягивает страницу */
+    }
+
+    .panel {
+        padding: 20px; /* Меньше отступы вну��ри панели */
+    }
+
+    .hud-text {
+        font-size: 0.7rem;
+    }
+    .top-left {
+        left: 20px;
+        top: 15px;
+    }
+    .bottom-right {
+        right: 20px;
+        bottom: 15px;
+    }
+
+    /* Адаптация окна документации */
+    .doc-layout {
+        flex-direction: column;
+    }
+    .doc-sidebar {
+        width: 100%;
+        height: 150px; /* Меню сверху */
+        border-right: none;
+        border-bottom: 1px solid #30363d;
+    }
+    .doc-content {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    /* Еще более мелкие экраны (телефоны) */
+    .hud-overlay {
+        /* Сдвигаем HUD, чтобы он не перекрывал кнопки */
+        pointer-events: none;
+    }
+    
+    .hud-text {
+        position: static;
+        text-align: center;
+        margin-top: 5px;
+        display: block;
+    }
+    
+    .top-left, .bottom-right {
+        width: 100%;
+        padding: 5px;
+    }
+    
+    .timer-display {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        border-radius: 0;
+        font-size: 1.2rem;
+        padding: 2px 0;
+    }
+
+    .sidebar {
+        margin-top: 30px; /* Отступ под таймер */
+    }
+
+    .task-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-primary {
+        width: 100%; /* Кнопка во всю ширину */
+    }
+    
+    .interact-area {
+        flex-direction: column;
+    }
+
+    .widgets-wrapper.right-bottom {
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    .widgets-panel {
+        align-items: center;
     }
 }
