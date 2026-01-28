@@ -594,7 +594,7 @@ function takeDamage() {
         setTimeout(() => {
             const screen = document.getElementById('lock-screen');
             screen.classList.remove('hidden');
-            screen.innerHTML = `<h1 style="color:red; font-size: 3rem;">СИСТЕМА УНИЧТОЖЕНА</h1>`;
+            screen.innerHTML = `<h1 style="color:red; font-size: 3rem;">ВЫ ПОГИБЛИ</h1>`;
             setTimeout(() => stopHardcore(), 2000);
         }, 600);
     }
@@ -1090,4 +1090,5 @@ function showDocItem(item, el) {
         </div>
     `;
 }
+
 
