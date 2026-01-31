@@ -4,41 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Подготовка к ОГЭ по информатике</title>
+    <!-- Подключаем стили -->
     <link rel="stylesheet" href="style.css">
+    <!-- Подключаем шрифты (Share Tech Mono для UI и Fira Code для кода) -->
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- СЛОЙ 1: ФОН (CANVAS) -->
-    <!-- Матричный дождь -->
-    <canvas id="rainCanvas"></canvas> 
-    <!-- 3D объекты и линии -->
+    <!-- [СЛОЙ 1: ФОН] Canvas для анимации -->
+    <!-- rainCanvas для матричного дождя -->
+    <canvas id="rainCanvas"></canvas>
+    <!-- objCanvas для 3D объектов и линий -->
     <canvas id="objCanvas"></canvas>
     
-    <!-- СЛОЙ 2: ЭФФЕКТЫ ПОВЕРХ ВСЕГО -->
-    <!-- Красная вспышка при получении урона -->
+    <!-- [СЛОЙ 2: ЭФФЕКТЫ] Красная вспышка при получении урона -->
     <div id="damage-fx" class="damage-overlay"></div>
 
-    <!-- СЛОЙ 3: HUD (ИНТЕРФЕЙС) -->
+    <!-- [СЛОЙ 3: HUD] Интерфейс поверх всего -->
     <div class="hud-overlay">
-        <!-- Декоративный текст слева -->
         <div class="hud-text top-left"></div> 
         
-        <!-- Статистика игрока -->
+        <!-- Статистика игрока справа снизу -->
         <div class="hud-text bottom-right">
             ЖИЗНИ: <span id="lives-display" style="color:#fff">---</span> | 
             СЧЕТ: <span id="score-display" style="color:#fff">---</span>
         </div>
-        
-        <!-- Эффект старого монитора (полосы) -->
+        <!-- Эффект полос старого монитора -->
         <div class="scanlines"></div>
-        
-        <!-- Таймер для хардкор режима -->
+        <!-- Таймер для хардкор режима (по умолчанию скрыт) -->
         <div id="hardcore-timer" class="timer-display hidden">03:00.00</div>
     </div>
 
-    <!-- СЛОЙ 4: МОДАЛЬНЫЕ ОКНА (БЛОКИРОВКИ) -->
-    
-    <!-- Экран наказания (Слот-машина) -->
+    <!-- [СЛОЙ 4: МОДАЛЬНЫЕ ОКНА] -->
+
+    <!-- Экран блокировки/наказания  -->
     <div id="lock-screen" class="hidden">
         <div class="lock-box">
             <h1 style="color:var(--danger); animation:glitch 0.3s infinite; margin-bottom:10px;">НАКАЗАНИЕ</h1>
@@ -48,7 +46,7 @@
         </div>
     </div>
 
-    <!-- Окно просмотра исходного кода -->
+    <!-- Окно просмотра исходного кода (документация) -->
     <div id="doc-overlay" class="hidden">
         <div class="doc-window rounded">
             <div class="doc-header">
@@ -56,18 +54,20 @@
                 <button class="doc-close-btn" onclick="closeDocs()">[X]</button>
             </div>
             <div class="doc-layout">
+                <!-- Навигация слева -->
                 <div class="doc-sidebar" id="doc-nav"></div>
+                <!-- Контент справа -->
                 <div class="doc-content" id="doc-viewer">
                     <div class="doc-placeholder">
                         <h2 style="color:var(--primary)">/// SELECT MODULE</h2>
-                        <p>Выберите модуль слева для просмотра кода.</p>
+                        <p>Выберите модуль слева для просмотра исходного кода и документации.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Окно терминала -->
+    <!-- Окно терминала  -->
     <div id="terminal-overlay" class="hidden">
         <div class="terminal-window rounded">
             <div class="term-header">
@@ -82,16 +82,17 @@
         </div>
     </div>
 
-    <!-- СЛОЙ 5: ОСНОВНОЙ КОНТЕНТ (МАКЕТ) -->
+    <!-- [СЛОЙ 5: ОСНОВНОЙ КОНТЕНТ] -->
     <div class="layout">
         <!-- Боковая панель (Меню) -->
         <aside class="sidebar rounded">
+            <!-- Логотип (клик ведет на главную) -->
             <div class="logo-area rounded" onclick="goHome()">
                 <div id="title-main" class="cyber-title">ОСНОВНОЙ ГОСУДАРСТВЕННЫЙ ЭКЗАМЕН</div>
                 <div id="title-sub" class="cyber-subtitle">ПОДГОТОВКА</div>
             </div>
             
-            <!-- Кнопки управления режимами -->
+            <!-- Кнопки управления хардкор-режимом и кодом -->
             <div id="hardcore-controls">
                 <div id="btn-start-hc" class="hc-btn start" onclick="startRoulette()">
                     РЕЖИМ ПРАКТИКИ
@@ -104,31 +105,38 @@
                 </div>
             </div>
 
+            <!-- Список модулей/заданий -->
             <div id="menu-container" class="menu-scroll"></div>
         </aside>
 
-        <!-- Центральная область -->
+        <!-- Центральная часть -->
         <main class="content">
+            <!-- Приветственный блок (виден по умолчанию) -->
             <div id="welcome-block" class="panel rounded active">
                 <h1 style="color:var(--primary); margin-bottom:20px;">/// INFO</h1>
                 <p style="margin-bottom: 15px; line-height: 1.5;">
-                    Как готовиться к ОГЭ по информатике? Вы открываете сборник заданий...
+                    Как готовиться к ОГЭ по информатике? Вы открываете сборник заданий ОГЭ и понимаете, что кое-что успели забыть, а о чем-то не слышали вовсе. Тогда вы ищите в сети интернет теорию и понимаете, что не знаете, на каком сайте более подробно написана информация, в каком разделе искать сведения и другое.
+                </p>
+                <p style="margin-bottom: 15px; line-height: 1.5;">
+                    Предлагаю вам короткий и эффективный путь к успеху. Я разработала для вас разбор каждого задание ОГЭ по информатике. Здесь вы найдете теоретический материал, который содержит только то, что необходимо и достаточно для выполнения заданий ОГЭ по информатике, а далее, после изучения подробного материала, размещена практика для проверки себя в виде разбора заданий из ОГЭ по информатике.
                 </p>
                 <p style="margin-bottom: 15px; line-height: 1.5; color: var(--secondary);">
-                    В ОГЭ по информатике всего 16 заданий. 1-12 (тест) и 13-16 (ПК).
+                    В ОГЭ по информатике всего 16 заданий. Задания делятся на ��ервую (тестовую) и вторую (часть решаемая на компьютере) часть. 1-12 задание - первая часть, в которой за каждое задание можно получить по одному баллу, 13-16 задание - вторая часть, которая решается в ручную на компьютере, а за каждое задание можно получить по два балла
                 </p>
             </div>
 
-            <!-- Блок задания (скрыт по умолчанию) -->
+            <!-- Блок выполнения задания (скрыт по умолчанию) -->
             <div id="task-block" class="panel rounded hidden">
                 <div class="task-header-row">
-                    <h2 id="task-header" class="task-h2">ЗАДА��А</h2>
+                    <h2 id="task-header" class="task-h2">ЗАДАЧА</h2>
                     <span id="roulette-badge" class="hidden">РАНДОМ</span>
                 </div>
+                <!-- Переключатель Теория / Практика -->
                 <div class="nav-tabs">
                     <button class="tab active" onclick="setTab('theory')">ТЕОРИЯ</button>
                     <button class="tab" onclick="setTab('practice')">ЗАДАЧА</button>
                 </div>
+                <!-- Контент вкладок -->
                 <div id="content-theory" class="tab-body active"></div>
                 <div id="content-practice" class="tab-body">
                     <div id="question-text" class="q-box rounded"></div>
@@ -142,7 +150,7 @@
         </main>
     </div>
 
-    <!-- шпаргалки справа снизу -->
+    <!-- Кнопка виджетов (шпаргалки) справа снизу -->
     <div class="widgets-wrapper right-bottom">
         <div id="widgets-panel" class="widgets-panel"></div>
         <button class="widget-toggle" onclick="toggleWidgets()">?</button>
