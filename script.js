@@ -1,18 +1,23 @@
-let db = null;
-let bgSnippets = [];
-let currentTask = null;
-let isHardcore = false;
-let lives = 5;
-let score = 0;
-let hcTimer = null;
-let timeLeft = 18000;
-let isBlocked = false;
+/* ==============================================
+   ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И СОСТОЯНИЕ
+   ============================================== */
+let db = null;             // Объект с данными заданий (из data.json)
+let bgSnippets = [];       // Массив строк для фона (из background_data.json)
+let currentTask = null;    // Текущая выбранная задача
+let isHardcore = false;    // Флаг режима практика
+let lives = 5;             // Количество жизней в режиме практики
+let score = 0;             // Текущий счет
+let hcTimer = null;        // Переменная для хранения setInterval таймера
+let timeLeft = 18000;      // Время таймера (в сотых долях секунды, 18000 = 3 минуты)
+let isBlocked = false;     // Блокировка ввода во время наказания (мини-игры)
 
-const SYMBOLS = ["🍒", "🍋", "🍇", "💎", "7️⃣", "🔔"];
-const ICON_HEIGHT = 83.33; 
-const DECRYPT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
-const ZALGO_MARKS = ['\u030d', '\u030e', '\u0304', '\u0305', '\u033f', '\u0311'];
+// Константы для визуальных эффектов и мини-игр
+const SYMBOLS = ["🍒", "🍋", "🍇", "💎", "7️⃣", "🔔"]; // Символы для слот-машины
+const ICON_HEIGHT = 83.33; // Высота одного символа в барабане (для анимации прокрутки)
+const DECRYPT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*"; // Символы для эффекта дешифровки
+const ZALGO_MARKS = ['\u030d', '\u030e', '\u0304', '\u0305', '\u033f', '\u0311']; // Символы для "порченого" текста
 
+// Варианты переводов заголовка (для эффекта смены языка)
 const TITLE_LANGS = [
     { m: "ОСНОВНОЙ ГОСУДАРСТВЕННЫЙ ЭКЗАМЕН", s: "ПОДГОТОВКА" },
     { m: "BASIC STATE EXAMINATION", s: "PREPARATION" },
@@ -26,7 +31,7 @@ const TITLE_LANGS = [
     { m: "EXAME ESTADUAL BÁSICO", s: "PREPARAÇÃO" }
 ];
 
-// === DOCS DATA ===
+// Данные для внутренней документации (отображаются в окне [?] ИСХОДНЫЙ КОД)
 const docsDB = [
     {
         id: "arch_overview",
@@ -35,7 +40,7 @@ const docsDB = [
         code: `// Глобальное состояние приложения
 let db = null;           // База данных заданий (из JSON)
 let currentTask = null;  // Текущая активная задача
-let isHardcore = false;  // Режим: Тренировка / Хардкор
+let isHardcore = false;  // Режим: Тренировка / Ха��дкор
 let lives = 5;           // Количество жизней
 let score = 0;           // Текущий счет
 let hcTimer = null;      // ID интервала таймера
@@ -297,12 +302,16 @@ function takeDamage() {
     }
 ];
 
+/* ==============================================
+   ИНИЦИАЛИЗАЦИЯ И ЗАГРУЗКА
+   ============================================== */
 window.onload = async () => {
     await loadData();
     initTitleSystem();
     initUltimateSystem();
 };
 
+// Асинхронная загрузка JSON данных (задачи и сниппеты)
 async function loadData() {
     try {
         const [dataRes, snippetsRes] = await Promise.all([
@@ -312,6 +321,8 @@ async function loadData() {
         db = await dataRes.json();
         const snippetsData = await snippetsRes.json();
         bgSnippets = snippetsData.snippets;
+        
+        // Рендеринг начального меню и виджетов после загрузки
         renderMenu();
         renderWidgets();
     } catch (e) {
@@ -319,61 +330,83 @@ async function loadData() {
     }
 }
 
+/* ==============================================
+   ЛОГИКА РЕЖИМА ПРАКТИКИ
+   ============================================== */
+
+// старт практики
 function startRoulette() {
     isHardcore = true;
     lives = 5;
     score = 0;
+    
+    // Обновляем UI
     updateHUD();
     updateMenuLockState();
 
+    // Переключаем кнопки управления
     document.getElementById('btn-start-hc').classList.add('hidden');
     document.getElementById('btn-stop-hc').classList.remove('hidden');
     
+    // Запускаем выбор следующей задачи
     spinNextTask();
 }
 
+// Анимация выбора задачи и переключение экрана
 function spinNextTask() {
+    // Собираем все задачи из всех модулей в один массив
     const allTasks = [];
     db.modules.forEach(m => m.tasks.forEach(t => allTasks.push(t)));
 
+    // Показываем блок задачи
     document.getElementById('welcome-block').classList.add('hidden');
     document.getElementById('task-block').classList.remove('hidden');
 
+    // Эффект "рулетки" заголовка
     let count = 0;
     const interval = setInterval(() => {
         const rnd = allTasks[Math.floor(Math.random() * allTasks.length)];
         document.getElementById('task-header').innerText = rnd.title;
+        // Случайный цвет для эффекта мерцания
         document.getElementById('task-header').style.color = Math.random() > 0.5 ? '#ff0055' : '#00ff9d';
         count++;
+        // После 20 итераций останавливаемся
         if (count > 20) {
             clearInterval(interval);
             document.getElementById('task-header').style.color = "";
             loadTask(rnd, true);
-            startTimer();
+            startTimer(); // Запуск таймера на решение
         }
     }, 80);
 }
 
+// Остановка режима практики и выход в меню
 function stopHardcore() {
     isHardcore = false;
     clearInterval(hcTimer);
     updateMenuLockState();
+    
+    // Возвращаем кнопки
     document.getElementById('btn-start-hc').classList.remove('hidden');
     document.getElementById('btn-stop-hc').classList.add('hidden');
     
+    // Скрываем элементы HUD хардкора
     document.getElementById('hardcore-timer').classList.add('hidden');
     document.getElementById('roulette-badge').classList.add('hidden');
     document.getElementById('lives-display').innerText = "---";
     document.getElementById('score-display').innerText = "---";
+    
     goHome();
 }
 
+// Обновление отображения жизней и счета
 function updateHUD() {
     if (!isHardcore) return;
     document.getElementById('lives-display').innerText = lives;
     document.getElementById('score-display').innerText = score;
 }
 
+// Блокировка/разблокировка меню выбора заданий
 function updateMenuLockState() {
     const headers = document.querySelectorAll('.mod-header');
     headers.forEach(h => {
@@ -382,15 +415,17 @@ function updateMenuLockState() {
     });
 }
 
+// Запуск таймера обратного отсчета
 function startTimer() {
     clearInterval(hcTimer);
-    timeLeft = 18000;
+    timeLeft = 18000; // 3 минуты (в 10мс интервалах)
     updateTimerDisplay();
     document.getElementById('hardcore-timer').classList.remove('hidden');
 
     hcTimer = setInterval(() => {
         timeLeft--;
         updateTimerDisplay();
+        // Если время вышло - вызываем мини-игру
         if (timeLeft <= 0) {
             clearInterval(hcTimer);
             triggerMiniGame("ВРЕМЯ ВЫШЛО");
@@ -398,6 +433,7 @@ function startTimer() {
     }, 10);
 }
 
+// Форматирование времени (MM:SS.ms)
 function updateTimerDisplay() {
     const el = document.getElementById('hardcore-timer');
     let secs = Math.floor(timeLeft / 100);
@@ -411,9 +447,15 @@ function pad(n) {
     return n < 10 ? '0' + n : n;
 }
 
+/* ==============================================
+   ЛОГИКА МИНИ-ИГРЫ 
+   ============================================== */
+
+// Запуск экрана наказания
 function triggerMiniGame(reason) {
-    isBlocked = true;
+    isBlocked = true; // Блокируем ввод ответов
     clearInterval(hcTimer);
+    
     const screen = document.getElementById('lock-screen');
     const container = document.getElementById('mini-game-container');
     const msg = document.getElementById('lock-reason');
@@ -425,6 +467,7 @@ function triggerMiniGame(reason) {
     initSlots(container);
 }
 
+// Инициализация HTML для слотов
 function initSlots(container) {
     container.innerHTML = `
         <div class="slot-machine">
@@ -449,6 +492,7 @@ function initSlots(container) {
         </div>
     `;
 
+    // Заполнение начальными символами
     [1, 2, 3].forEach(id => {
         const strip = document.querySelector(`#reel${id} .reel-strip`);
         let html = "";
@@ -463,61 +507,72 @@ function getRandomSymbol() {
     return SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
 }
 
+// Основная функция прокрутки слотов
 window.spinSlots = () => {
     const btn = document.getElementById('btn-spin');
     if (btn.disabled) return;
     btn.disabled = true;
     btn.innerText = "...";
 
+    // RNG: Определение результата ДО анимации
     const r = Math.random();
     let isWin = false;
     let isJackpot = false;
     let result = [];
 
     if (r < 0.02) {
+        // 2% шанс на джекпот (три семерки)
         isWin = true;
         isJackpot = true;
         result = ["7️⃣", "7️⃣", "7️⃣"];
     } else if (r < 0.40) {
+        // 40% шанс на обычную победу
         isWin = true;
         isJackpot = false;
         const simpleSymbols = ["🍒", "🍋", "🍇", "💎", "🔔"];
         const winSym = simpleSymbols[Math.floor(Math.random() * simpleSymbols.length)];
         result = [winSym, winSym, winSym];
     } else {
+        // Проигрыш (разные символы)
         isWin = false;
         isJackpot = false;
         do {
             result = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
-        } while (result[0] === result[1] && result[1] === result[2]);
+        } while (result[0] === result[1] && result[1] === result[2]); // Гарантируем, что не все 3 равны
     }
 
+    // Анимация барабанов
     [1, 2, 3].forEach((id, index) => {
         const reel = document.querySelector(`#reel${id} .reel-strip`);
-        const spinCount = 20 + (index * 10);
+        const spinCount = 20 + (index * 10); // Разное количество оборотов для каждого барабана
         const finalSet = [getRandomSymbol(), result[index], getRandomSymbol()];
 
         let reversedHtml = "";
         reversedHtml += `<div class="slot-icon">${finalSet[0]}</div>`;
-        reversedHtml += `<div class="slot-icon target">${finalSet[1]}</div>`;
+        reversedHtml += `<div class="slot-icon target">${finalSet[1]}</div>`; // Целевой символ (по центру)
         reversedHtml += `<div class="slot-icon">${finalSet[2]}</div>`;
+        
+        // Добавляем "размытые" символы для эффекта вращения
         for (let i = 0; i < spinCount; i++) {
             reversedHtml += `<div class="slot-icon blur">${getRandomSymbol()}</div>`;
         }
 
         reel.innerHTML = reversedHtml;
 
+        // Сброс позиции перед анимацией
         const startY = -(spinCount) * ICON_HEIGHT;
         reel.style.transition = "none";
         reel.style.transform = `translateY(${startY}px)`;
 
-        reel.offsetHeight;
+        reel.offsetHeight; // Force reflow (перерисовка)
 
+        // Запуск анимации CSS transform
         const duration = 2 + (index * 0.5);
         reel.style.transition = `transform ${duration}s cubic-bezier(0.25, 1, 0.5, 1)`;
         reel.style.transform = "translateY(0px)";
     });
 
+    // Показ результата после завершения анимации
     setTimeout(() => {
         showResultOverlay(isWin, isJackpot);
     }, 3500);
@@ -529,7 +584,7 @@ function showResultOverlay(isWin, isJackpot) {
     const subtext = document.getElementById('result-subtext');
 
     overlay.classList.remove('hidden');
-    void overlay.offsetWidth;
+    void overlay.offsetWidth; // Trigger reflow для анимации
 
     if (isWin) {
         if (isJackpot) {
@@ -558,6 +613,7 @@ function showResultOverlay(isWin, isJackpot) {
     }, 2500);
 }
 
+// Завершение мини-игры и применение эффектов
 function finishGame(win, jackpot) {
     const screen = document.getElementById('lock-screen');
     const overlay = document.getElementById('result-overlay');
@@ -568,19 +624,21 @@ function finishGame(win, jackpot) {
         if (jackpot) {
             lives += 2;
         }
+        // Если обычная победа - просто не теряем жизнь
     } else {
         takeDamage();
     }
 
     isBlocked = false;
-    startTimer();
+    startTimer(); // Перезапуск таймера
     updateHUD();
 }
 
+// Обработка получения урона
 function takeDamage() {
     const fx = document.getElementById('damage-fx');
-    document.body.classList.add('shake');
-    fx.style.animation = 'flashRed 0.5s ease-out';
+    document.body.classList.add('shake'); // Эффект тряски
+    fx.style.animation = 'flashRed 0.5s ease-out'; // Красная вспышка
 
     setTimeout(() => {
         document.body.classList.remove('shake');
@@ -590,6 +648,7 @@ function takeDamage() {
     lives--;
     updateHUD();
 
+    // Проверка на Game Over
     if (lives <= 0) {
         setTimeout(() => {
             const screen = document.getElementById('lock-screen');
@@ -600,6 +659,11 @@ function takeDamage() {
     }
 }
 
+/* ==============================================
+   UI И НАВИГАЦИЯ
+   ============================================== */
+
+// Рендеринг бокового меню задач
 function renderMenu() {
     const cont = document.getElementById('menu-container');
     cont.innerHTML = '';
@@ -612,6 +676,7 @@ function renderMenu() {
     let p2Started = false;
 
     db.modules.forEach((mod, idx) => {
+        // Разделение на Часть 1 �� Часть 2
         if (!p2Started && (mod.title.includes("13") || mod.title.includes("14") || mod.title.includes("15"))) {
             const part2Title = document.createElement('div');
             part2Title.className = 'menu-section-title';
@@ -633,6 +698,7 @@ function renderMenu() {
     });
 }
 
+// Открытие фейкового терминала
 function openTerminal(mod) {
     const overlay = document.getElementById('terminal-overlay');
     const logs = document.getElementById('term-logs');
@@ -644,6 +710,7 @@ function openTerminal(mod) {
     const lines = [`user@oge:~$ ${mod.cmd}`, `> Loading...`, `> Done.`];
     let i = 0;
 
+    // Эффект печатания текста
     function print() {
         if (i < lines.length) {
             const d = document.createElement('div');
@@ -661,6 +728,7 @@ function openTerminal(mod) {
     print();
 }
 
+// Показ списка задач внутри терминала
 function showTaskSelection(mod) {
     const menu = document.getElementById('term-menu');
     const list = document.getElementById('term-tasks-list');
@@ -682,10 +750,13 @@ function closeTerminal() {
     document.getElementById('terminal-overlay').classList.add('hidden');
 }
 
+// Загрузка выбранной задачи в основной блок
 function loadTask(task, isHC) {
     currentTask = task;
     document.getElementById('welcome-block').classList.add('hidden');
     document.getElementById('task-block').classList.remove('hidden');
+    
+    // Эффект дешифровки заголовка
     const h = document.getElementById('task-header');
     h.innerText = task.title;
     decryptEffect(h, task.title);
@@ -701,6 +772,7 @@ function loadTask(task, isHC) {
     setTab('theory');
 }
 
+// Переключение табов (Теория / Задача)
 function setTab(t) {
     document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-body').forEach(b => b.classList.remove('active'));
@@ -710,6 +782,7 @@ function setTab(t) {
     document.getElementById(`content-${t}`).classList.add('active');
 }
 
+// Проверка ответа
 function verifyAnswer() {
     if (!currentTask || isBlocked) return;
     const userAnswer = document.getElementById('inp-answer').value.trim().toLowerCase();
@@ -722,18 +795,19 @@ function verifyAnswer() {
         if (isHardcore) {
             clearInterval(hcTimer);
             let points = 1;
+            // Задачи 2-й части стоят дороже
             if (currentTask.title.includes("13") || currentTask.title.includes("14") || currentTask.title.includes("15")) {
                 points = 2;
             }
             score += points;
             updateHUD();
-            setTimeout(spinNextTask, 1000);
+            setTimeout(spinNextTask, 1000); // Автопереход к следующей
         }
     } else {
         resultMsg.innerText = ">> ОШИБКА.";
         resultMsg.className = "fail";
         if (isHardcore) {
-            triggerMiniGame("ОШИБКА");
+            triggerMiniGame("ОШИБКА"); // Наказание
         }
     }
 }
@@ -744,6 +818,7 @@ function goHome() {
     document.getElementById('task-block').classList.add('hidden');
 }
 
+// Управление виджетами (справа снизу)
 function toggleWidgets() {
     document.getElementById('widgets-panel').classList.toggle('show');
 }
@@ -759,6 +834,7 @@ function renderWidgets() {
     });
 }
 
+// Эффект дешифровки текста (случайные символы превращаются в текст)
 function decryptEffect(el, txt) {
     let i = 0;
     const interval = setInterval(() => {
@@ -770,6 +846,7 @@ function decryptEffect(el, txt) {
     }, 30);
 }
 
+// Эффект Zalgo (искажение текста)
 function toZalgo(t) {
     let r = '';
     for (let c of t) {
@@ -779,6 +856,7 @@ function toZalgo(t) {
     return r;
 }
 
+// Смена заголовка страницы (разные языки)
 function initTitleSystem() {
     const m = document.getElementById('title-main');
     const s = document.getElementById('title-sub');
@@ -794,7 +872,7 @@ function cycleTitle(mElement, sElement) {
     let lang;
 
     if (Math.random() < 0.5) {
-        lang = TITLE_LANGS[0];
+        lang = TITLE_LANGS[0]; // Русский приоритет
     } else {
         const otherLangs = TITLE_LANGS.slice(1);
         lang = otherLangs[Math.floor(Math.random() * otherLangs.length)];
@@ -804,6 +882,9 @@ function cycleTitle(mElement, sElement) {
     setTimeout(() => decryptEffect(sElement, lang.s), 200);
 }
 
+/* ==============================================
+   ГГРАФИКА
+   ============================================== */
 function initUltimateSystem() {
     const rainCvs = document.getElementById('rainCanvas');
     const objCvs = document.getElementById('objCanvas');
@@ -811,6 +892,7 @@ function initUltimateSystem() {
     const ctxObj = objCvs.getContext('2d');
     let w, h;
 
+    // Обработка изменения размера окна
     function resize() {
         w = rainCvs.width = objCvs.width = window.innerWidth;
         h = rainCvs.height = objCvs.height = window.innerHeight;
@@ -818,13 +900,15 @@ function initUltimateSystem() {
     window.addEventListener('resize', resize);
     resize();
 
+    // Отслеживание мыши
     let mouse = { x: -1000, y: -1000 };
     window.addEventListener('mousemove', e => {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
     });
-    let ghostMouse = { x: w / 2, y: h / 2, angle: 0 };
+    let ghostMouse = { x: w / 2, y: h / 2, angle: 0 }; // Дополнительная "призрачная" мышь для эффектов
 
+    // Класс капли матричного дождя
     class RainDrop {
         constructor() {
             this.reset();
@@ -846,6 +930,7 @@ function initUltimateSystem() {
         update() {
             this.y += this.speed;
             if (this.y > h + 100) this.reset();
+            // Мерцание цифр в матрице
             if (this.type === 'MATRIX' && Math.random() > 0.9) {
                 this.mData[Math.floor(Math.random() * this.mData.length)] = Math.floor(Math.random() * 10);
             }
@@ -876,6 +961,7 @@ function initUltimateSystem() {
         for (let i = 0; i < 50; i++) rainItems.push(new RainDrop());
     }, 500);
 
+    // Класс для плавающих объектов (код, сниппеты)
     class FloatObj {
         constructor() {
             this.reset();
@@ -887,22 +973,25 @@ function initUltimateSystem() {
             const src = bgSnippets.length ? bgSnippets : ["..."];
             this.raw = src[Math.floor(Math.random() * src.length)];
             this.lines = this.raw.split('\n');
-            this.vx = (Math.random() - 0.5) * 0.4;
-            this.vy = (Math.random() - 0.5) * 0.4;
+            this.vx = (Math.random() - 0.5) * 0.4; // Скорость по X
+            this.vy = (Math.random() - 0.5) * 0.4; // Скорость по Y
             this.color = Math.random() > 0.8 ? '#00ff9d' : '#445566';
             this.baseColor = this.color;
             this.opacity = Math.random() * 0.5 + 0.3;
-            this.isHashed = false;
+            this.isHashed = false; // Состояние "зашифровано" (при наведении мыши)
             this.isGlitch = false;
         }
 
         update() {
             this.x += this.vx;
             this.y += this.vy;
+            // Бесконечная прокрутка за краями экрана
             if (this.x < -200) this.x = w + 200;
             if (this.x > w + 200) this.x = -200;
             if (this.y < -100) this.y = h + 100;
             if (this.y > h + 100) this.y = -100;
+            
+            // Взаимодействие с мышью
             const dx = this.x - mouse.x;
             const dy = this.y - mouse.y;
             if (Math.sqrt(dx * dx + dy * dy) < 150) {
@@ -912,7 +1001,7 @@ function initUltimateSystem() {
                     this.opacity = 1.0;
                     this.isHashed = true;
                 }
-                this.x += dx * 0.01;
+                this.x += dx * 0.01; // Легкое отталкивание
                 this.y += dy * 0.01;
             } else {
                 if (this.isHashed) {
@@ -944,11 +1033,13 @@ function initUltimateSystem() {
         for (let i = 0; i < 15; i++) floaters.push(new FloatObj());
     }, 500);
 
+    // Параметры аттрактора Лоренца
     let lx = 0.1, ly = 0, lz = 0;
     const lPoints = [];
     const sigma = 10, rho = 28, beta = 8 / 3, dt = 0.01;
     let lAngle = 0;
 
+    // Рендеринг Аттрактора Лоренца
     function renderLorenz() {
         for (let i = 0; i < 5; i++) {
             let dx = (sigma * (ly - lx)) * dt;
@@ -977,6 +1068,7 @@ function initUltimateSystem() {
 
     let waveAngle = 0;
 
+    // Рендеринг цифровой волны
     function renderDigitalWave() {
         const startX = w - 300;
         const startY = 150;
@@ -998,23 +1090,29 @@ function initUltimateSystem() {
         }
     }
 
+    // Главный цикл анимации (60 FPS)
     function loop() {
         ctxRain.clearRect(0, 0, w, h);
         ctxObj.clearRect(0, 0, w, h);
         ctxRain.fillStyle = "#00ff9d";
+        
+        // Обновление дождя
         rainItems.forEach(r => {
             r.update();
             r.draw();
         });
 
+        // Анимация призрачной мыши
         ghostMouse.angle += 0.02;
         ghostMouse.x = w / 2 + Math.sin(ghostMouse.angle) * (w / 3);
         ghostMouse.y = h / 2 + Math.cos(ghostMouse.angle * 1.3) * (h / 3);
         ctxObj.lineWidth = 1;
 
+        // Обновление плавающих объектов и отрисовка линий связи
         floaters.forEach((f, i) => {
             f.update();
             f.draw();
+            // Линия к курсору мыши
             const dx = f.x - mouse.x;
             const dy = f.y - mouse.y;
             if (Math.sqrt(dx * dx + dy * dy) < 200) {
@@ -1024,6 +1122,7 @@ function initUltimateSystem() {
                 ctxObj.lineTo(mouse.x, mouse.y);
                 ctxObj.stroke();
             }
+            // Линия к призрачной мыши
             const gdx = f.x - ghostMouse.x;
             const gdy = f.y - ghostMouse.y;
             if (Math.sqrt(gdx * gdx + gdy * gdy) < 150) {
@@ -1033,7 +1132,8 @@ function initUltimateSystem() {
                 ctxObj.lineTo(ghostMouse.x, ghostMouse.y);
                 ctxObj.stroke();
             }
-
+            
+            // Линии между объектами (сетевой эффект)
             for (let j = i + 1; j < floaters.length; j++) {
                 const f2 = floaters[j];
                 const dist = Math.sqrt((f.x - f2.x) ** 2 + (f.y - f2.y) ** 2);
@@ -1055,7 +1155,7 @@ function initUltimateSystem() {
     loop();
 }
 
-// === DOCS FUNCTIONS ===
+// === ДОКУМЕНТАЦИЯ ===
 function openDocs() {
     document.getElementById('doc-overlay').classList.remove('hidden');
     renderDocsNav();
@@ -1090,5 +1190,3 @@ function showDocItem(item, el) {
         </div>
     `;
 }
-
-
