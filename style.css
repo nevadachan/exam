@@ -1,15 +1,18 @@
+/* ==============================================
+   1. ПЕРЕМЕННЫЕ И БАЗОВЫЕ НАСТРОЙКИ
+   ============================================== */
 :root {
-    --bg: #050508;
-    --text: #c0c5ce;
-    --primary: #00ff9d;
-    --secondary: #00b8ff;
-    --danger: #ff0055;
-    --panel: rgba(12, 16, 20, 0.95);
-    --border: rgba(0, 255, 157, 0.25);
-    --radius: 12px;
-    --font-ui: 'Share Tech Mono', monospace;
-    --font-code: 'Fira Code', monospace;
-    --slot-gold: #ffb700;
+    --bg: #050508;          /* Глубокий черный фон */
+    --text: #c0c5ce;        /* Основной цвет текста */
+    --primary: #00ff9d;     /* Основной акцент (неоново-зеленый) */
+    --secondary: #00b8ff;   /* Вторичный акцент (голубой) */
+    --danger: #ff0055;      /* Цвет опасности/ошибки (красный) */
+    --panel: rgba(12, 16, 20, 0.95); /* Полупрозрачный фон панелей */
+    --border: rgba(0, 255, 157, 0.25); /* Цвет рамок */
+    --radius: 12px;         /* Радиус скругления углов */
+    --font-ui: 'Share Tech Mono', monospace; /* Шрифт интерфейса */
+    --font-code: 'Fira Code', monospace;     /* Шрифт кода */
+    --slot-gold: #ffb700;   /* Золотой цвет для джекпота */
 }
 
 * {
@@ -23,11 +26,14 @@ body {
     color: var(--text);
     font-family: var(--font-ui);
     height: 100vh;
-    overflow: hidden; /* Важно для десктопа, на мобильном может потребоваться auto */
-    user-select: none;
+    overflow: hidden; /* Важно для десктопа (скрываем системный скролл) */
+    user-select: none; /* Запрет выделения текста */
     position: relative;
 }
 
+/* ==============================================
+   2. СЛОИ ФОНА (CANVAS)
+   ============================================== */
 #rainCanvas,
 #objCanvas {
     position: fixed;
@@ -38,14 +44,17 @@ body {
 }
 
 #rainCanvas {
-    z-index: -3;
-    opacity: 0.25;
+    z-index: -3; /* Самый задний план */
+    opacity: 0.25; /* Матрица должна быть тусклой */
 }
 
 #objCanvas {
     z-index: -2;
 }
 
+/* ==============================================
+   3. ИНТЕРФЕЙС HUD (ПОВЕРХ ВСЕГО)
+   ============================================== */
 .hud-overlay {
     position: fixed;
     top: 0;
@@ -53,9 +62,10 @@ body {
     width: 100%;
     height: 100%;
     z-index: 50;
-    pointer-events: none;
+    pointer-events: none; /* Пропускает клики сквозь себя */
 }
 
+/* Эффект ЭЛТ-монитора (полосы) */
 .scanlines {
     width: 100%;
     height: 100%;
@@ -81,6 +91,7 @@ body {
     text-align: right;
 }
 
+/* Таймер в режиме хардкора (сверху по центру) */
 .timer-display {
     position: absolute;
     top: 10px;
@@ -98,6 +109,7 @@ body {
     letter-spacing: 2px;
 }
 
+/* Эффект красной вспышки при уроне */
 .damage-overlay {
     position: fixed;
     top: 0;
@@ -110,10 +122,14 @@ body {
     z-index: 9999;
 }
 
+/* Анимация тряски экрана */
 .shake {
     animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
 }
 
+/* ==============================================
+   4. МАКЕТ И МЕНЮ (SIDEBAR)
+   ============================================== */
 .layout {
     display: flex;
     height: 100vh;
@@ -177,6 +193,7 @@ body {
     width: 100%;
 }
 
+/* Кнопки управления режимом */
 #hardcore-controls {
     margin-bottom: 15px;
     padding-bottom: 15px;
@@ -226,6 +243,7 @@ body {
     box-shadow: 0 0 15px var(--secondary);
 }
 
+/* Список заданий (скроллбар) */
 #menu-container {
     flex: 1;
     overflow-y: auto;
@@ -272,6 +290,9 @@ body {
     pointer-events: none;
 }
 
+/* ==============================================
+   5. ОСНОВНОЙ КОНТЕНТ
+   ============================================== */
 .content {
     flex: 1;
     background: transparent;
@@ -397,6 +418,9 @@ input {
     background: #fff;
 }
 
+/* ==============================================
+   6. МОДАЛЬНЫЕ ОКНА
+   ============================================== */
 #terminal-overlay,
 #lock-screen,
 #doc-overlay {
@@ -427,9 +451,10 @@ input {
     z-index: 9000;
 }
 
+/* Окно терминала */
 .terminal-window {
     width: 650px;
-    max-width: 100%; /* Резиновая ширина */
+    max-width: 100%; /* Резиновая ширин�� */
     height: 450px;
     max-height: 90vh;
     background: #0a0c10;
@@ -441,7 +466,72 @@ input {
     position: relative;
 }
 
-/* Styles for Docs Window */
+.term-header {
+    background: #14181e;
+    padding: 10px 15px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #888;
+    border-radius: 12px 12px 0 0;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.green {
+    background: #27c93f;
+}
+
+.term-body {
+    padding: 20px;
+    color: var(--primary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.term-menu {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #0a0c10;
+    border-radius: 0 0 12px 12px;
+}
+
+.term-task-link {
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    margin-bottom: 5px;
+    border-radius: 6px;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.term-task-link:hover {
+    border-color: var(--primary);
+    background: rgba(0, 255, 157, 0.1);
+    color: #fff;
+}
+
+.term-close-btn {
+    margin-top: auto;
+    background: transparent;
+    border: 1px solid #333;
+    color: #666;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+/* Окно документации */
 .doc-window {
     width: 95vw;
     height: 90vh;
@@ -542,74 +632,12 @@ input {
     font-size: 0.8rem;
     color: #a5d6ff;
     white-space: pre-wrap;
-    max-width: 100%; /* Чтобы код не распира�� экран */
+    max-width: 100%; /* Чтобы код не распира экран */
 }
 
-.term-header {
-    background: #14181e;
-    padding: 10px 15px;
-    border-bottom: 1px solid #333;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #888;
-    border-radius: 12px 12px 0 0;
-}
-
-.dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-
-.green {
-    background: #27c93f;
-}
-
-.term-body {
-    padding: 20px;
-    color: var(--primary);
-    font-size: 0.9rem;
-    line-height: 1.5;
-    flex: 1;
-    overflow-y: auto;
-}
-
-.term-menu {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    background: #0a0c10;
-    border-radius: 0 0 12px 12px;
-}
-
-.term-task-link {
-    padding: 10px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    margin-bottom: 5px;
-    border-radius: 6px;
-    color: #ccc;
-    font-size: 0.9rem;
-}
-
-.term-task-link:hover {
-    border-color: var(--primary);
-    background: rgba(0, 255, 157, 0.1);
-    color: #fff;
-}
-
-.term-close-btn {
-    margin-top: auto;
-    background: transparent;
-    border: 1px solid #333;
-    color: #666;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 6px;
-}
-
+/* ==============================================
+   7. МИНИ-ИГРА (СЛОТ-МАШИНА)
+   ============================================== */
 .lock-box {
     text-align: center;
     border: 1px solid #333;
@@ -796,6 +824,9 @@ input {
     transform: scale(1);
 }
 
+/* ==============================================
+   8. ВИДЖЕТЫ (ШПАРГАЛКИ)
+   ============================================== */
 .widgets-wrapper {
     position: fixed;
     z-index: 100;
@@ -852,6 +883,7 @@ input {
     border-radius: var(--radius);
 }
 
+/* Анимация красной вспышки */
 @keyframes flashRed {
     0% {
         opacity: 0.8;
@@ -861,6 +893,7 @@ input {
     }
 }
 
+/* Анимация тряски экрана */
 @keyframes shake {
     10%, 90% {
         transform: translate3d(-1px, 0, 0);
@@ -876,9 +909,9 @@ input {
     }
 }
 
-/* =========================================
-   MEDIA QUERIES (RESPONSIVE)
-   ========================================= */
+/* ==============================================
+   9. АДАПТИВ (MEDIA QUERIES)
+   ============================================== */
 
 @media (max-width: 900px) {
     body {
@@ -926,7 +959,7 @@ input {
     }
 
     .panel {
-        padding: 20px; /* Меньше отступы вну��ри панели */
+        padding: 20px; /* Меньше отступы внури панели */
     }
 
     .hud-text {
@@ -1010,4 +1043,3 @@ input {
         align-items: center;
     }
 }
-
