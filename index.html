@@ -8,22 +8,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <canvas id="rainCanvas"></canvas>
+    <!-- СЛОЙ 1: ФОН (CANVAS) -->
+    <!-- Матричный дождь -->
+    <canvas id="rainCanvas"></canvas> 
+    <!-- 3D объекты и линии -->
     <canvas id="objCanvas"></canvas>
     
+    <!-- СЛОЙ 2: ЭФФЕКТЫ ПОВЕРХ ВСЕГО -->
+    <!-- Красная вспышка при получении урона -->
     <div id="damage-fx" class="damage-overlay"></div>
 
+    <!-- СЛОЙ 3: HUD (ИНТЕРФЕЙС) -->
     <div class="hud-overlay">
+        <!-- Декоративный текст слева -->
         <div class="hud-text top-left"></div> 
         
+        <!-- Статистика игрока -->
         <div class="hud-text bottom-right">
             ЖИЗНИ: <span id="lives-display" style="color:#fff">---</span> | 
             СЧЕТ: <span id="score-display" style="color:#fff">---</span>
         </div>
+        
+        <!-- Эффект старого монитора (полосы) -->
         <div class="scanlines"></div>
+        
+        <!-- Таймер для хардкор режима -->
         <div id="hardcore-timer" class="timer-display hidden">03:00.00</div>
     </div>
 
+    <!-- СЛОЙ 4: МОДАЛЬНЫЕ ОКНА (БЛОКИРОВКИ) -->
+    
+    <!-- Экран наказания (Слот-машина) -->
     <div id="lock-screen" class="hidden">
         <div class="lock-box">
             <h1 style="color:var(--danger); animation:glitch 0.3s infinite; margin-bottom:10px;">НАКАЗАНИЕ</h1>
@@ -33,6 +48,7 @@
         </div>
     </div>
 
+    <!-- Окно просмотра исходного кода -->
     <div id="doc-overlay" class="hidden">
         <div class="doc-window rounded">
             <div class="doc-header">
@@ -44,13 +60,14 @@
                 <div class="doc-content" id="doc-viewer">
                     <div class="doc-placeholder">
                         <h2 style="color:var(--primary)">/// SELECT MODULE</h2>
-                        <p>Выберите модуль слева для просмотра исходного кода и документации.</p>
+                        <p>Выберите модуль слева для просмотра кода.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Окно терминала -->
     <div id="terminal-overlay" class="hidden">
         <div class="terminal-window rounded">
             <div class="term-header">
@@ -65,13 +82,16 @@
         </div>
     </div>
 
+    <!-- СЛОЙ 5: ОСНОВНОЙ КОНТЕНТ (МАКЕТ) -->
     <div class="layout">
+        <!-- Боковая панель (Меню) -->
         <aside class="sidebar rounded">
             <div class="logo-area rounded" onclick="goHome()">
                 <div id="title-main" class="cyber-title">ОСНОВНОЙ ГОСУДАРСТВЕННЫЙ ЭКЗАМЕН</div>
                 <div id="title-sub" class="cyber-subtitle">ПОДГОТОВКА</div>
             </div>
             
+            <!-- Кнопки управления режимами -->
             <div id="hardcore-controls">
                 <div id="btn-start-hc" class="hc-btn start" onclick="startRoulette()">
                     РЕЖИМ ПРАКТИКИ
@@ -87,23 +107,22 @@
             <div id="menu-container" class="menu-scroll"></div>
         </aside>
 
+        <!-- Центральная область -->
         <main class="content">
             <div id="welcome-block" class="panel rounded active">
                 <h1 style="color:var(--primary); margin-bottom:20px;">/// INFO</h1>
                 <p style="margin-bottom: 15px; line-height: 1.5;">
-                    Как готовиться к ОГЭ по информатике? Вы открываете сборник заданий ОГЭ и понимаете, что кое-что успели забыть, а о чем-то не слышали вовсе. Тогда вы ищите в сети интернет теорию и понимаете, что не знаете, на каком сайте более подробно написана информация, в каком разделе искать сведения и другое.
-                </p>
-                <p style="margin-bottom: 15px; line-height: 1.5;">
-                    Предлагаю вам короткий и эффективный путь к успеху. Я разработала для вас разбор каждого задание ОГЭ по информатике. Здесь вы найдете теоретический материал, который содержит только то, что необходимо и достаточно для выполнения заданий ОГЭ по информатике, а далее, после изучения подробного материала, размещена практика для проверки себя в виде разбора заданий из ОГЭ по информатике.
+                    Как готовиться к ОГЭ по информатике? Вы открываете сборник заданий...
                 </p>
                 <p style="margin-bottom: 15px; line-height: 1.5; color: var(--secondary);">
-                    В ОГЭ по информатике всего 16 заданий. Задания делятся на первую (тестовую) и вторую (часть решаемая на компьютере) часть. 1-12 задание - первая часть, в которой за каждое задание можно получить по одному баллу, 13-16 задание - вторая часть, которая решается в ручную на компьютере, а за каждое задание можно получить по два балла
+                    В ОГЭ по информатике всего 16 заданий. 1-12 (тест) и 13-16 (ПК).
                 </p>
             </div>
 
+            <!-- Блок задания (скрыт по умолчанию) -->
             <div id="task-block" class="panel rounded hidden">
                 <div class="task-header-row">
-                    <h2 id="task-header" class="task-h2">ЗАДАЧА</h2>
+                    <h2 id="task-header" class="task-h2">ЗАДА��А</h2>
                     <span id="roulette-badge" class="hidden">РАНДОМ</span>
                 </div>
                 <div class="nav-tabs">
@@ -123,6 +142,7 @@
         </main>
     </div>
 
+    <!-- шпаргалки справа снизу -->
     <div class="widgets-wrapper right-bottom">
         <div id="widgets-panel" class="widgets-panel"></div>
         <button class="widget-toggle" onclick="toggleWidgets()">?</button>
