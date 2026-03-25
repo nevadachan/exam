@@ -156,6 +156,43 @@
             "answer": "270"
         }
     ]
+},
+
+      {
+  "title": "ЗАДАНИЕ 11: ПОИСК В ФАЙЛАХ",
+  "cmd": "./load_module_11 --search",
+  "tasks": [
+    {
+      "title": "11.1 ПОИСК ИНФОРМАЦИИ В ФАЙЛАХ",
+      "theory": "<h3>ЗАДАНИЕ 11. ТЕОРИЯ</h3><p><b>Суть задания:</b> нужно уметь пользоваться поиском в ОС и в редакторе, чтобы находить информацию в папках и файлах.</p><hr><h4>КАК РЕШАТЬ</h4><ol><li>Откройте нужный каталог (например, <b>DEMO-11/Проза</b>).</li><li>В строке поиска введите ключевое слово/фразу (часть цитаты).</li><li>Откройте найденный файл.</li><li>Нажмите <code>Ctrl+F</code> и найдите точное место в тексте.</li><li>Считайте/выпишите требуемую информацию.</li></ol><p style='color:var(--secondary)'><b>Совет:</b> если фраза не находится — попробуйте заменить <b>ё</b> на <b>е</b>, убрать запятые или искать по одному редкому слову.</p>",
+      "question": "<p>В одном из произведений А.П. Чехова героиня произносит фразу:</p><p style='background:#111; padding:10px; border-left:3px solid var(--secondary); font-style:italic;'>«Сегодня я в мерехлюндии, невесело мне, и ты не слушай меня»</p><p>Текст произведения находится в подкаталоге каталога <b>Проза</b>.</p><p style='color:var(--primary); font-size:1.1rem; margin-top:15px;'><b>Как зовут эту героиню?</b></p>",
+      "answer": "маша"
+    }
+  ]
+},
+{
+  "title": "ЗАДАНИЕ 12: РАБОТА С ФАЙЛОВОЙ СИСТЕМОЙ",
+  "cmd": "./load_module_12 --masks",
+  "tasks": [
+    {
+      "title": "12.1 ПОИСК ФАЙЛОВ ПО МАСКЕ (*, ?)",
+      "theory": "<h3>ЗАДАНИЕ 12. ТЕОРИЯ</h3><p><b>Суть задания:</b> находить файлы по маске имени (шаблону) и расширению.</p><hr><h4>МАСКИ</h4><ul><li><code>*</code> — любое количество любых символов (в т.ч. 0).</li><li><code>?</code> — ровно один любой символ.</li></ul><table style='width:100%; border-collapse:collapse; font-family:monospace; margin:15px 0;'><tr style='background:#222;'><th style='padding:10px; border:1px solid #444;'>Маска</th><th style='border:1px solid #444;'>Что найдёт</th></tr><tr><td style='border:1px solid #444; padding:8px;'>*.png</td><td style='border:1px solid #444; padding:8px;'>все файлы PNG</td></tr><tr><td style='border:1px solid #444; padding:8px;'>a?.txt</td><td style='border:1px solid #444; padding:8px;'>a1.txt, ab.txt, a_.txt и т.п. (2 символа до .txt)</td></tr><tr><td style='border:1px solid #444; padding:8px;'>???.docx</td><td style='border:1px solid #444; padding:8px;'>только имена из 3 символов с расширением .docx</td></tr></table>",
+      "question": "<p>В строке поиска файловой системы используется маска:</p><div style='background:#111; padding:15px; text-align:center; font-size:1.4rem; font-family:monospace; border-radius:8px; margin:15px 0;'><code style='color:var(--primary);'>???.txt</code></div><p>Какой из перечисленных файлов <b>будет найден</b> по этой маске?</p><div style='background:#111; padding:15px; border-radius:8px; margin:15px 0; font-family:monospace;'><p>A) ab.txt</p><p>B) abc.txt</p><p>C) abcd.txt</p><p>D) .txt</p></div>",
+      "answer": "b"
+    }
+  ]
+},
+{
+  "title": "ЗАДАНИЕ 13: РАБОТА С ПРИЛОЖЕНИЯМИ",
+  "cmd": "./load_module_13 --office",
+  "tasks": [
+    {
+      "title": "13.1 POWERPOINT + WORD (ОФОРМЛЕНИЕ)",
+      "theory": "<h3>ЗАДАНИЕ 13. ТЕОРИЯ</h3><p><b>Суть задания:</b> уметь выполнять оформление документа/презентации по требованиям (шрифты, размеры, выравнивание, списки, вставка изображений, таблицы).</p><hr><h4>POWERPOINT (кратко)</h4><ul><li>Добавить слайд: <b>Главная → Создать слайд</b></li><li>Вставка изображения: <b>Вставка → Рисунки</b></li><li>Размер шрифта: выделить текст → <b>Главная → Шрифт</b></li><li>Формат слайда: <b>Конструктор → Размер слайда</b> (часто 16:9)</li></ul><hr><h4>WORD (кратко)</h4><ul><li>Выравнивание: по ширине/центру/лево/право</li><li>Отступ первой строки: <b>Абзац → Отступ</b></li><li>Интервалы: <b>Абзац → Интервал</b></li><li>Таблица: <b>Вставка → Таблица</b></li></ul><p style='color:var(--secondary)'><b>Важно:</b> на ОГЭ обычно требуют строго заданные размеры шрифтов и структуру (например, 3 слайда, без анимации).</p>",
+      "question": "<p>При создании презентации в PowerPoint требуется:</p><ul style='margin:15px 0; line-height:2;'><li>Ровно <b>3 слайда</b>, без анимации</li><li>Формат: <b>16:9</b>, ориентация альбомная</li><li>Размер шрифта для названия на титульном слайде: <b>? пунктов</b></li></ul><p style='color:var(--primary); font-size:1.1rem; margin-top:15px;'><b>Какой размер шрифта используется для названия презентации на титульном слайде согласно стандартным требованиям ОГЭ?</b></p>",
+      "answer": "40"
+    }
+  ]
 }
 
    ],
